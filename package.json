@@ -1,0 +1,18 @@
+{
+  "name": "babel-plugins",
+  "version": "1.0.0",
+  "description": "Custom babel plugins",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/fengxinming/babel-plugins.git"
+  },
+  "author": "Jesse Feng",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/fengxinming/babel-plugins/issues"
+  },
+  "homepage": "https://github.com/fengxinming/babel-plugins#readme"
+}
