@@ -14,5 +14,17 @@
   "bugs": {
     "url": "https://github.com/fengxinming/babel-plugins/issues"
   },
-  "homepage": "https://github.com/fengxinming/babel-plugins#readme"
+  "homepage": "https://github.com/fengxinming/babel-plugins#readme",
+  "devDependencies": {
+    "babel-eslint": "^10.1.0",
+    "eslint": "^7.1.0",
+    "eslint-config-airbnb": "^18.1.0",
+    "eslint-config-ali": "^9.0.2",
+    "eslint-plugin-flowtype": "^5.1.3",
+    "eslint-plugin-import": "^2.20.2",
+    "eslint-plugin-jsx-a11y": "^6.2.3",
+    "eslint-plugin-react": "^7.20.0",
+    "eslint-plugin-react-hooks": "^4.0.4",
+    "fs-extra": "^9.0.0"
+  }
 }

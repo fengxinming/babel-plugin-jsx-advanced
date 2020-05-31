@@ -1,0 +1,14 @@
+{
+  "name": "demo",
+  "private": true,
+  "version": "1.0.0",
+  "scripts": {
+    "transform": "node ./scripts/transform.js"
+  },
+  "author": "Jesse Feng",
+  "license": "MIT",
+  "devDependencies": {
+    "@babel/core": "^7.10.2",
+    "fs-extra": "^9.0.0"
+  }
+}

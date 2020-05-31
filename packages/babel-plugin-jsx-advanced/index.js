@@ -1,15 +1,15 @@
 'use strict';
 
 const parseIfTag = require('./parse/if');
-const parseIfDirective = require('./parse/i-if');
-const parseClassDirective = require('./parse/i-class');
-const parseShowDirective = require('./parse/i-show');
-const parseHtmlDirective = require('./parse/i-html');
+const parseIfDirective = require('./parse/x-if');
+const parseClassDirective = require('./parse/x-class');
+const parseShowDirective = require('./parse/x-show');
+const parseHtmlDirective = require('./parse/x-html');
 
 const { TAG_IF, TAG_ELSE_IF, TAG_ELSE } = parseIfTag;
 
 function getDirectiveNames({
-  prefix = 'i-',
+  prefix = 'x-',
   supportIf,
   supportClass,
   supportShow,
@@ -92,7 +92,7 @@ module.exports = function ({ types }, options) {
               );
               nodePath.unshiftContainer('body', importDeclaration);
             }
-          };
+          }
         }
       },
       JSXElement(nodePath, state) {

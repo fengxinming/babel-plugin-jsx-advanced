@@ -34,7 +34,7 @@ function createConditionalExpression(args, i) {
   );
 }
 
-module.exports = function (nodePath, simpleIfNode, xElif, iElse) {
+module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
   let canScan = false;
   let nextNodePath = nodePath;
   // 用于构造三目表达式
@@ -62,7 +62,7 @@ module.exports = function (nodePath, simpleIfNode, xElif, iElse) {
         nextNodePath.remove();
         canScan = true;
       } else { // 可能还有else
-        const nextElseNode = matchDirective(iElse, attributes);
+        const nextElseNode = matchDirective(xElse, attributes);
         if (nextElseNode) {
           attributes.splice(nextElseNode.key, 1);
           statementArgs.push(null, nextNodePath.node);

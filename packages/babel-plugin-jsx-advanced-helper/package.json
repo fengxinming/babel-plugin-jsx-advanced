@@ -1,0 +1,31 @@
+{
+  "name": "babel-plugin-jsx-advanced-helper",
+  "version": "1.0.0",
+  "description": "babel-plugin-jsx-advanced 插件的辅助函数",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "rollup -c"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengxinming/babel-plugins/tree/master/packages/babel-plugin-jsx-advanced-helper"
+  },
+  "keywords": [
+    "babel",
+    "babel-plugin",
+    "jsx",
+    "directive"
+  ],
+  "author": "Jesse Feng",
+  "license": "MIT",
+  "dependencies": {
+    "celia": "^7.0.1"
+  },
+  "devDependencies": {
+    "rollup": "^2.12.0",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-empty": "^1.0.0",
+    "rollup-plugin-match": "^1.0.0"
+  }
+}
