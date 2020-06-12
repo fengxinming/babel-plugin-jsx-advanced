@@ -9,7 +9,7 @@ const parseHtmlDirective = require('./parse/x-html');
 const { TAG_IF, TAG_ELSE_IF, TAG_ELSE } = parseIfTag;
 
 function getDirectiveNames({
-  prefix = 'x-',
+  prefix,
   supportIf,
   supportClass,
   supportShow,
@@ -62,6 +62,9 @@ function getDirectiveNodes(types, directives, attributes) {
 }
 
 module.exports = function ({ types }, options) {
+  if (!options.prefix) {
+    options.prefix = 'x-';
+  }
   const directiveNames = getDirectiveNames(options);
   const {
     classHelper = 'babel-plugin-jsx-advanced-helper/es/class-helper',
@@ -122,8 +125,6 @@ module.exports = function ({ types }, options) {
           htmlDirective
         } = directiveNodes;
 
-        let removedNum = 0;
-
         // 处理if指令
         if (ifDirective) {
           if (ifDirective.value === null) {
@@ -135,7 +136,7 @@ module.exports = function ({ types }, options) {
             directiveNames.elifDirective,
             directiveNames.elseDirective
           );
-          removedNum = attributes.splice(ifDirective.key, 1).length;
+          attributes.splice(ifDirective.key, 1);
         } else if (elifDirective) {
           throw nodePath.buildCodeFrameError(`'${elifDirective.name}' 指令需要上一个JSX节点包含 '${directiveNames.ifDirective}' 指令.`);
         } else if (elseDirective) {
@@ -153,7 +154,6 @@ module.exports = function ({ types }, options) {
             directiveNodes.classNameAttr,
             classHelperAlias
           );
-          removedNum = attributes.splice(classDirective.key - removedNum, 1);
           state.__directiveHelpers.set(classHelperAlias, classHelper);
         }
 
@@ -168,7 +168,6 @@ module.exports = function ({ types }, options) {
             directiveNodes.styleAttr,
             showHelperAlias
           );
-          removedNum = attributes.splice(showDirective.key - removedNum, 1);
           state.__directiveHelpers.set(showHelperAlias, showHelper);
         }
 
@@ -182,7 +181,26 @@ module.exports = function ({ types }, options) {
             htmlDirective,
             directiveNodes.dangerouslySetInnerHTMLAttr
           );
-          attributes.splice(htmlDirective.key - removedNum, 1);
+        }
+        
+        // 删除扩展属性
+        const { prefix } = options;
+        for (let i = 0, l = attributes.length; i < l; i++) {
+          const attr = attributes[i];
+          // 有可能存在 JSXSpreadAttribute
+          if (types.isJSXAttribute(attr)) {
+            const { name } = attr.name;
+            if (name.startsWith(prefix)) {
+              for (const n in directiveNames) {
+                if (name === directiveNames[n]) {
+                  attributes.splice(i, 1);
+                  i--;
+                  l--;
+                  break;
+                }
+              }
+            }
+          }
         }
       }
     }
