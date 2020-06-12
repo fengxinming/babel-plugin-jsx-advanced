@@ -83,10 +83,7 @@ function parseIfTag(nodePath) {
     // 获取下一个兄弟属性节点
     nextNodePath = nextNodePath.getSibling(nextNodePath.key + 1);
 
-    // 空白节点 换行符等
-    if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
-      canScan = true;
-    } else if (nextNodePath.isJSXElement()) {
+    if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       switch (nextNodePath.node.openingElement.name.name) {
         case TAG_ELSE_IF: {
@@ -102,6 +99,10 @@ function parseIfTag(nodePath) {
           break;
         }
       }
+    } else if ((nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') ||
+    (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression))) {
+      // 空白节点 换行符 注释等
+      canScan = true;
     }
   } while (canScan);
 
