@@ -45,30 +45,31 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
     // 获取下一个兄弟属性节点
     nextNodePath = nextNodePath.getSibling(nextNodePath.key + 1);
 
-    // 空白节点 换行符等
-    if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
-      canScan = true;
-    } else if (nextNodePath.isJSXElement()) {
+    if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       const { node: { openingElement: { attributes } } } = nextNodePath;
-      const nextElseIfNode = matchDirective(xElif, attributes);
+      const nextElseIfNode = matchDirective(iElif, attributes);
       if (nextElseIfNode) {
         const { key, value } = nextElseIfNode;
         if (value === null) {
-          throw nextNodePath.get('openingElement').get(`attributes.${key}`).buildCodeFrameError(`'${xElif}' 指令需要绑定一个变量或表达式.`);
+          throw nextNodePath.get('openingElement').get(`attributes.${key}`).buildCodeFrameError(`'${iElif}' 指令需要绑定一个变量或表达式.`);
         }
         attributes.splice(key, 1);
         statementArgs.push(value, nextNodePath.node);
         nextNodePath.remove();
         canScan = true;
       } else { // 可能还有else
-        const nextElseNode = matchDirective(xElse, attributes);
+        const nextElseNode = matchDirective(iElse, attributes);
         if (nextElseNode) {
           attributes.splice(nextElseNode.key, 1);
           statementArgs.push(null, nextNodePath.node);
           nextNodePath.remove();
         }
       }
+    } else if ((nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') ||
+        (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression))) {
+      // 空白节点 换行符 注释等
+      canScan = true;
     }
   } while (canScan);
 
