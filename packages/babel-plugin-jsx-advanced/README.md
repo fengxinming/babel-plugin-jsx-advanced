@@ -4,7 +4,7 @@
 
 ## 安装
 ```bash
-$ tnpm i --save-dev babel-plugin-jsx-advanced
+$ npm i --save-dev babel-plugin-jsx-advanced
 ```
 ## 修改babel配置
 
