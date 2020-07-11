@@ -68,13 +68,13 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
           nextNodePath.remove();
         }
       }
-    } else if (
-      (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') ||
-      (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression))
-    ) {
-      // 空白节点 换行符 空表达式等
+    } else if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
+      // 空白节点 换行符
       canScan = true;
+    } else if (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression)) {
+      // 空表达式
       nextNodePath.remove();
+      canScan = true;
     }
   } while (canScan);
 
