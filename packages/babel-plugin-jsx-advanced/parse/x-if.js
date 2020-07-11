@@ -13,14 +13,16 @@ function matchDirective(directive, attributes) {
         value: types.isJSXExpressionContainer(value)
           ? value.expression
           : value
-      }; ;
+      };
     }
   }
   return null;
 }
 
 function createConditionalExpression(args, i) {
+  // eslint-disable-next-line no-plusplus
   const test = args[i++];
+  // eslint-disable-next-line no-plusplus
   const consequent = args[i++];
   const nextTest = args[i];
   return types.conditionalExpression(
@@ -45,10 +47,7 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
     // 获取下一个兄弟属性节点
     nextNodePath = nextNodePath.getSibling(nextNodePath.key + 1);
 
-    // 空白节点 换行符等
-    if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
-      canScan = true;
-    } else if (nextNodePath.isJSXElement()) {
+    if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       const { node: { openingElement: { attributes } } } = nextNodePath;
       const nextElseIfNode = matchDirective(xElif, attributes);
@@ -69,6 +68,13 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
           nextNodePath.remove();
         }
       }
+    } else if (
+      (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') ||
+      (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression))
+    ) {
+      // 空白节点 换行符 空表达式等
+      canScan = true;
+      nextNodePath.remove();
     }
   } while (canScan);
 

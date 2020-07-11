@@ -8,9 +8,15 @@ module.exports = function (attributes, simpleShowNode, simpleStyleNode, showHelp
       types.jsxAttribute(
         types.jsxIdentifier('style'),
         types.jsxExpressionContainer(
-          types.callExpression(
-            types.identifier(showHelperAlias),
-            [types.nullLiteral(), simpleShowNode.value]
+          types.conditionalExpression(
+            simpleShowNode.value,
+            types.nullLiteral(),
+            types.objectExpression([
+              types.objectProperty(
+                types.stringLiteral('display'),
+                types.stringLiteral('none')
+              )
+            ])
           )
         )
       )

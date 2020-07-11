@@ -1,6 +1,7 @@
 'use strict';
 
 const types = require('@babel/types');
+
 const TAG_IF = 'if';
 const TAG_ELSE_IF = 'elif';
 const TAG_ELSE = 'else';
@@ -42,7 +43,7 @@ function getTagNode(nodePath) {
   if (!attributes.length) {
     throw nodePath.buildCodeFrameError(`<${name.name}> 标签需要一个 value 属性并绑定一个变量或表达式.`);
   }
-  let value = attributes[0].value;
+  let { value } = attributes[0];
   value = types.isJSXExpressionContainer(value)
     ? value.expression
     : value;
@@ -57,7 +58,9 @@ function getTagNode(nodePath) {
 }
 
 function createConditionalExpression(args, i) {
+  // eslint-disable-next-line no-plusplus
   const test = args[i++];
+  // eslint-disable-next-line no-plusplus
   const consequent = args[i++];
   const nextTest = args[i];
   return types.conditionalExpression(
@@ -83,10 +86,7 @@ function parseIfTag(nodePath) {
     // 获取下一个兄弟属性节点
     nextNodePath = nextNodePath.getSibling(nextNodePath.key + 1);
 
-    // 空白节点 换行符等
-    if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
-      canScan = true;
-    } else if (nextNodePath.isJSXElement()) {
+    if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       switch (nextNodePath.node.openingElement.name.name) {
         case TAG_ELSE_IF: {
@@ -102,6 +102,13 @@ function parseIfTag(nodePath) {
           break;
         }
       }
+    } else if (
+      (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') ||
+      (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression))
+    ) {
+      // 空白节点 换行符 空表达式等
+      canScan = true;
+      nextNodePath.remove();
     }
   } while (canScan);
 
@@ -112,7 +119,7 @@ function parseIfTag(nodePath) {
   } else {
     nodePath.replaceWith(ifExp);
   }
-};
+}
 
 parseIfTag.TAG_IF = TAG_IF;
 parseIfTag.TAG_ELSE_IF = TAG_ELSE_IF;
