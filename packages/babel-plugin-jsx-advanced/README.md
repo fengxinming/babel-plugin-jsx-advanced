@@ -49,7 +49,6 @@ module.exports = {
 ### 配置参数
 * `prefix` - 指令前缀，默认为`'x-'`；
 * `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
-* `supportItextTag` - 是否支持`<itext>`标签，默认关闭；
 * `supportIf` - 是否支持`${prefix}if`指令，默认开启；
 * `supportClass` - 是否支持`${prefix}class`指令，默认开启；
 * `supportShow` - 是否支持`${prefix}show`指令，默认开启；
