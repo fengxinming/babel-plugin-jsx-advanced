@@ -1,34 +1,55 @@
 # babel-plugin-jsx-advanced
 
+[![npm package](https://nodei.co/npm/babel-plugin-jsx-advanced.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/babel-plugin-jsx-advanced)
+
 > jsx指令扩展和标签扩展
 
 ## 安装
+
 ```bash
 $ npm i --save-dev babel-plugin-jsx-advanced
 ```
 ## 修改babel配置
 
 ### 常见React项目配置
+
 **babel.config.js**
+
 ```js
 module.exports = {
   plugins: [
-    'babel-plugin-jsx-advanced'
-  ]
-};
-```
-> 自定义配置参数
-```js
-module.exports = {
-  plugins: [
-    ['babel-plugin-jsx-advanced', {
-      // ... 配置参数
-    }]
+    [
+      'babel-plugin-jsx-advanced', 
+      {
+        // ... 可选配置参数
+      }
+    ]
   ]
 };
 ```
 
-> 自定义配置参数
+**config-overrides.js**
+
+```js
+const {
+  override,
+  addBabelPlugins
+} = require('customize-cra');
+
+module.exports = override(
+  ...addBabelPlugins(
+    [
+      'babel-plugin-jsx-advanced',
+      {
+        // ... 可选配置参数
+      }
+    ]
+  )
+)
+```
+
+**ice.config.js**
+
 ```js
 module.exports = {
   chainWebpack(chainedConfig) {
@@ -37,30 +58,36 @@ module.exports = {
       .use('babel-loader')
       .tap((options) => {
         options.plugins.push(
-          ['babel-plugin-jsx-advanced', {
-            // ... 配置参数
-          }]
+          [
+            'babel-plugin-jsx-advanced', 
+            {
+              // ... 可选配置参数
+            }
+          ]
         );
         return options;
       });
-  },
+  }
+}
 ```
 
 ### 配置参数
+
 * `prefix` - 指令前缀，默认为`'x-'`；
 * `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
 * `supportIf` - 是否支持`${prefix}if`指令，默认开启；
 * `supportClass` - 是否支持`${prefix}class`指令，默认开启；
 * `supportShow` - 是否支持`${prefix}show`指令，默认开启；
 * `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
-* `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/es/class-helper'`；
+* `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
 * `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__classHelper__'`；
-* `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/es/show-helper'`；
+* `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/show-helper'`；
 * `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__showHelper__'`；
 
 ## 使用
 
 ### if/elif/else 标签
+
 **单个if标签情况**
 ```jsx
 function render() {
@@ -118,6 +145,7 @@ function render() {
 ```
 
 ### i-if/i-elif/i-else 指令
+
 **单个i-if指令情况**
 ```jsx
 function render() {
@@ -189,6 +217,7 @@ function render() {
 ```
 
 ### i-class 指令
+
 ```jsx
 function render() {
   return (
@@ -220,6 +249,7 @@ function render() {
 ```
 
 ### i-show 指令
+
 ```jsx
 function render() {
   return (
@@ -245,6 +275,7 @@ function render() {
 ```
 
 ### i-html 指令
+
 ```jsx
 function render() {
   return (

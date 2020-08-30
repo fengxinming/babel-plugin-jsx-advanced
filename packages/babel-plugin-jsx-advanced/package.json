@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-advanced",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "description": "jsx特性扩展",
   "main": "index.js",
   "scripts": {
@@ -16,8 +16,11 @@
     "jsx",
     "directive"
   ],
-  "author": "Jesse Feng",
+  "author": "Jesse Feng <fxm0016@126.com>",
   "license": "MIT",
+  "dependencies": {
+    "babel-plugin-jsx-advanced-helper": "^1.0.1"
+  },
   "devDependencies": {
     "@babel/core": "^7.10.2",
     "@babel/types": "^7.10.2"

@@ -1,1 +1,1 @@
-export { default } from 'celia/es/className';
+export { default } from 'celia.classnames';

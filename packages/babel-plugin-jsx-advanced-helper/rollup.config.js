@@ -20,9 +20,9 @@ export default {
       outputDir: true
     })
   ],
-  external() {
-    return true;
-  },
+  // external() {
+  //   return true;
+  // },
   output: [{
     dir: 'dist/es',
     format: 'es'

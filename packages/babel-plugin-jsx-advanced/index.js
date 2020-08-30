@@ -62,13 +62,14 @@ function getDirectiveNodes(types, directives, attributes) {
 }
 
 module.exports = function ({ types }, options) {
+  options = options || {};
   if (!options.prefix) {
     options.prefix = 'x-';
   }
   const directiveNames = getDirectiveNames(options);
   const {
-    classHelper = 'babel-plugin-jsx-advanced-helper/es/class-helper',
-    showHelper = 'babel-plugin-jsx-advanced-helper/es/show-helper',
+    classHelper = 'celia.classnames',
+    showHelper = 'babel-plugin-jsx-advanced-helper/show-helper',
     classHelperAlias = '__classHelper__',
     showHelperAlias = '__showHelper__',
     supportIfTag
