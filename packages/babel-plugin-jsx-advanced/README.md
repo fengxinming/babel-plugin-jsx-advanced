@@ -234,7 +234,7 @@ function render() {
 ```
 > 等价于
 ```jsx
-import __classHelper__ from "babel-plugin-jsx-advanced/es/class-helper";
+import __classHelper__ from "celia.classnames";
 
 function render() {
 	return <div>
@@ -263,7 +263,7 @@ function render() {
 ```
 > 等价于
 ```jsx
-import __showHelper__ from "babel-plugin-jsx-advanced/es/show-helper";
+import __showHelper__ from "babel-plugin-jsx-advanced/show-helper";
 
 function render() {
 	return <div>
