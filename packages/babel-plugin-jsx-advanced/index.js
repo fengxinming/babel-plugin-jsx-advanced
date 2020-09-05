@@ -6,19 +6,22 @@ const parseClassDirective = require('./parse/x-class');
 const parseShowDirective = require('./parse/x-show');
 const parseHtmlDirective = require('./parse/x-html');
 
-const { TAG_IF, TAG_ELSE_IF, TAG_ELSE } = parseIfTag;
+const DEFAULT_IF_TAG = 'if';
+const DEFAULT_ELSE_IF_TAG = 'elif';
+const DEFAULT_ELSE_TAG = 'else';
 
 function getDirectiveNames({
   prefix,
   supportIf,
   supportClass,
   supportShow,
-  supportHtml
+  supportHtml,
+  elifAlias
 }) {
   const names = Object.create(null);
   if (supportIf !== false) {
     names.ifDirective = `${prefix}if`;
-    names.elifDirective = `${prefix}elif`;
+    names.elifDirective = `${prefix}${elifAlias}`;
     names.elseDirective = `${prefix}else`;
   }
   if (supportClass !== false) {
@@ -66,14 +69,21 @@ module.exports = function ({ types }, options) {
   if (!options.prefix) {
     options.prefix = 'x-';
   }
+  if (!options.elifAlias) {
+    options.elifAlias = DEFAULT_ELSE_IF_TAG;
+  }
   const directiveNames = getDirectiveNames(options);
   const {
     classHelper = 'celia.classnames',
     showHelper = 'babel-plugin-jsx-advanced-helper/show-helper',
     classHelperAlias = '__classHelper__',
     showHelperAlias = '__showHelper__',
-    supportIfTag
+    supportIfTag,
+    elifAlias
   } = options;
+  const IF_TAG = DEFAULT_IF_TAG;
+  const ELSE_TAG = DEFAULT_ELSE_TAG;
+  const ELSE_IF_TAG = elifAlias;
 
   return {
     visitor: {
@@ -105,13 +115,17 @@ module.exports = function ({ types }, options) {
         // 匹配if标签
         if (supportIfTag !== false) {
           switch (tagName) {
-            case TAG_IF:
-              parseIfTag(nodePath);
+            case IF_TAG:
+              parseIfTag(
+                nodePath,
+                ELSE_IF_TAG,
+                ELSE_TAG
+              );
               return;
-            case TAG_ELSE_IF:
-              throw nodePath.buildCodeFrameError(`<${TAG_ELSE_IF}> 标签需要上一个JSX节点是 '${TAG_IF}' 标签.`);
-            case TAG_ELSE:
-              throw nodePath.buildCodeFrameError(`<${TAG_ELSE}> 标签需要上一个JSX节点是 '${TAG_IF}' 或 '${TAG_ELSE_IF}' 标签.`);
+            case ELSE_IF_TAG:
+              throw nodePath.buildCodeFrameError(`<${ELSE_IF_TAG}> 标签需要上一个JSX节点是 '${IF_TAG}' 标签.`);
+            case ELSE_TAG:
+              throw nodePath.buildCodeFrameError(`<${ELSE_TAG}> 标签需要上一个JSX节点是 '${IF_TAG}' 或 '${ELSE_IF_TAG}' 标签.`);
           }
         }
 

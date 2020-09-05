@@ -2,10 +2,6 @@
 
 const types = require('@babel/types');
 
-const TAG_IF = 'if';
-const TAG_ELSE_IF = 'elif';
-const TAG_ELSE = 'else';
-
 function jsxFragment(children) {
   return types.jsxFragment(
     types.jsxOpeningFragment(),
@@ -74,7 +70,7 @@ function createConditionalExpression(args, i) {
   );
 }
 
-function parseIfTag(nodePath) {
+function parseIfTag(nodePath, ELSE_IF_TAG, ELSE_TAG) {
   let canScan = false;
   let nextNodePath = nodePath;
   // 用于构造三目表达式
@@ -89,14 +85,14 @@ function parseIfTag(nodePath) {
     if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       switch (nextNodePath.node.openingElement.name.name) {
-        case TAG_ELSE_IF: {
+        case ELSE_IF_TAG: {
           const elifTag = getTagNode(nextNodePath);
           canScan = true;
           statementArgs.push(elifTag.statement, elifTag.node);
           nextNodePath.remove();
           break;
         }
-        case TAG_ELSE: {
+        case ELSE_TAG: {
           statementArgs.push(null, combineNodes(nextNodePath.node.children));
           nextNodePath.remove();
           break;
@@ -120,9 +116,5 @@ function parseIfTag(nodePath) {
     nodePath.replaceWith(ifExp);
   }
 }
-
-parseIfTag.TAG_IF = TAG_IF;
-parseIfTag.TAG_ELSE_IF = TAG_ELSE_IF;
-parseIfTag.TAG_ELSE = TAG_ELSE;
 
 module.exports = parseIfTag;

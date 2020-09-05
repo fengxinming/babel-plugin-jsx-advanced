@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-advanced",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "jsx特性扩展",
   "main": "index.js",
   "scripts": {

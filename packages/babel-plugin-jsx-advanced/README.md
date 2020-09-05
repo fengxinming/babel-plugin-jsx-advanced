@@ -80,9 +80,10 @@ module.exports = {
 * `supportShow` - 是否支持`${prefix}show`指令，默认开启；
 * `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
 * `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
+* `elifAlias` - elif标签或者指令别名，可修改为`'else-if'`，默认为`'elif'`
 * `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__classHelper__'`；
 * `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/show-helper'`；
-* `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__showHelper__'`；
+* `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__showHelper__'`。
 
 ## 使用
 
