@@ -1,8 +1,6 @@
 'use strict';
 
-const types = require('@babel/types');
-
-module.exports = function (attributes, simpleHtmlNode, simpleDSHtmlNode) {
+module.exports = function (types, attributes, simpleHtmlNode, simpleDSHtmlNode) {
   const newValue = types.objectExpression([
     types.objectProperty(
       types.stringLiteral('__html'),

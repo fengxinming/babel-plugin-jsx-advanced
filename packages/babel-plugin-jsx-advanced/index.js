@@ -1,10 +1,10 @@
 'use strict';
 
 const parseIfTag = require('./parse/if');
-const parseIfDirective = require('./parse/x-if');
 const parseClassDirective = require('./parse/x-class');
-const parseShowDirective = require('./parse/x-show');
 const parseHtmlDirective = require('./parse/x-html');
+const parseIfDirective = require('./parse/x-if');
+const parseShowDirective = require('./parse/x-show');
 
 const DEFAULT_IF_TAG = 'if';
 const DEFAULT_ELSE_IF_TAG = 'elif';
@@ -117,6 +117,7 @@ module.exports = function ({ types }, options) {
           switch (tagName) {
             case IF_TAG:
               parseIfTag(
+                types,
                 nodePath,
                 ELSE_IF_TAG,
                 ELSE_TAG
@@ -146,6 +147,7 @@ module.exports = function ({ types }, options) {
             throw nodePath.get('openingElement').get(`attributes.${ifDirective.key}`).buildCodeFrameError(`'${ifDirective.name}' 指令需要绑定一个变量或表达式.`);
           }
           parseIfDirective(
+            types,
             nodePath,
             ifDirective,
             directiveNames.elifDirective,
@@ -164,6 +166,7 @@ module.exports = function ({ types }, options) {
             throw nodePath.get('openingElement').get(`attributes.${classDirective.key}`).buildCodeFrameError(`'${classDirective.name}' 指令需要绑定一个变量或表达式.`);
           }
           parseClassDirective(
+            types,
             attributes,
             classDirective,
             directiveNodes.classNameAttr,
@@ -178,6 +181,7 @@ module.exports = function ({ types }, options) {
             throw nodePath.get('openingElement').get(`attributes.${showDirective.key}`).buildCodeFrameError(`'${showDirective.name}' 指令需要绑定一个变量或表达式.`);
           }
           parseShowDirective(
+            types,
             attributes,
             showDirective,
             directiveNodes.styleAttr,
@@ -192,6 +196,7 @@ module.exports = function ({ types }, options) {
             throw nodePath.get('openingElement').get(`attributes.${htmlDirective.key}`).buildCodeFrameError(`'${htmlDirective.name}' 指令需要绑定一个变量或表达式.`);
           }
           parseHtmlDirective(
+            types,
             attributes,
             htmlDirective,
             directiveNodes.dangerouslySetInnerHTMLAttr

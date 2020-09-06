@@ -1,8 +1,8 @@
 'use strict';
 
-const types = require('@babel/types');
-
-module.exports = function (attributes, simpleClassNode, simpleClassNameNode, classHelperAlias) {
+module.exports = function (
+  types, attributes, simpleClassNode, simpleClassNameNode, classHelperAlias
+) {
   // 调用函数处理
   const callExp = types.callExpression(
     types.identifier(classHelperAlias),

@@ -1,8 +1,6 @@
 'use strict';
 
-const types = require('@babel/types');
-
-function matchDirective(directive, attributes) {
+function matchDirective(types, directive, attributes) {
   for (let i = 0, l = attributes.length; i < l; i++) {
     const attr = attributes[i];
     // 有可能存在 JSXSpreadAttribute
@@ -19,7 +17,7 @@ function matchDirective(directive, attributes) {
   return null;
 }
 
-function createConditionalExpression(args, i) {
+function createConditionalExpression(types, args, i) {
   // eslint-disable-next-line no-plusplus
   const test = args[i++];
   // eslint-disable-next-line no-plusplus
@@ -32,11 +30,11 @@ function createConditionalExpression(args, i) {
     nextTest === null
       ? args[i + 1]
       : nextTest === undefined
-        ? types.nullLiteral() : createConditionalExpression(args, i)
+        ? types.nullLiteral() : createConditionalExpression(types, args, i)
   );
 }
 
-module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
+module.exports = function (types, nodePath, simpleIfNode, xElif, xElse) {
   let canScan = false;
   let nextNodePath = nodePath;
   // 用于构造三目表达式
@@ -50,7 +48,7 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
     if (nextNodePath.isJSXElement()) {
       // else if 或者 else 情况
       const { node: { openingElement: { attributes } } } = nextNodePath;
-      const nextElseIfNode = matchDirective(xElif, attributes);
+      const nextElseIfNode = matchDirective(types, xElif, attributes);
       if (nextElseIfNode) {
         const { key, value } = nextElseIfNode;
         if (value === null) {
@@ -61,7 +59,7 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
         nextNodePath.remove();
         canScan = true;
       } else { // 可能还有else
-        const nextElseNode = matchDirective(xElse, attributes);
+        const nextElseNode = matchDirective(types, xElse, attributes);
         if (nextElseNode) {
           attributes.splice(nextElseNode.key, 1);
           statementArgs.push(null, nextNodePath.node);
@@ -79,7 +77,7 @@ module.exports = function (nodePath, simpleIfNode, xElif, xElse) {
   } while (canScan);
 
   // 创建条件语句
-  const ifExp = createConditionalExpression(statementArgs, 0);
+  const ifExp = createConditionalExpression(types, statementArgs, 0);
   if (nodePath.parentPath.isJSXElement()) {
     nodePath.replaceWith(types.jsxExpressionContainer(ifExp));
   } else {

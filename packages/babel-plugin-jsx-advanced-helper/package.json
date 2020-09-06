@@ -1,12 +1,14 @@
 {
   "name": "babel-plugin-jsx-advanced-helper",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "babel-plugin-jsx-advanced 插件的辅助函数",
   "main": "index.js",
+  "module": "es/index.js",
+  "sideEffects": false,
   "scripts": {
     "build": "rollup -c",
     "test": "jest --detectOpenHandles --config jest.config.js",
-    "release": "npm publish dist"
+    "release": "npm run build && npm publish dist"
   },
   "repository": {
     "type": "git",
@@ -16,15 +18,15 @@
     "babel",
     "babel-plugin",
     "jsx",
-    "directive"
+    "babel-plugin-jsx-advanced"
   ],
   "author": "Jesse Feng <fxm0016@126.com>",
   "license": "MIT",
   "dependencies": {
-    "celia.classnames": "^1.0.0"
+    "celia.classnames": "^1.0.1"
   },
   "devDependencies": {
-    "rollup": "^2.12.0",
+    "rollup": "^2.26.10",
     "rollup-plugin-combine": "^2.0.1",
     "rollup-plugin-copy": "^3.3.0",
     "rollup-plugin-empty": "^1.0.0",

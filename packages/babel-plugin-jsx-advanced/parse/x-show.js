@@ -1,8 +1,6 @@
 'use strict';
 
-const types = require('@babel/types');
-
-module.exports = function (attributes, simpleShowNode, simpleStyleNode, showHelperAlias) {
+module.exports = function (types, attributes, simpleShowNode, simpleStyleNode, showHelperAlias) {
   if (!simpleStyleNode) {
     attributes.push(
       types.jsxAttribute(

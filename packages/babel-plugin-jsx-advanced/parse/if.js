@@ -1,8 +1,6 @@
 'use strict';
 
-const types = require('@babel/types');
-
-function jsxFragment(children) {
+function createJSXFragment(types, children) {
   return types.jsxFragment(
     types.jsxOpeningFragment(),
     types.jsxClosingFragment(),
@@ -10,15 +8,15 @@ function jsxFragment(children) {
   );
 }
 
-function safeNode(node) {
+function safeNode(types, node) {
   return types.isJSXText(node)
-    ? jsxFragment([node])
+    ? createJSXFragment(types, [node])
     : types.isJSXExpressionContainer(node)
       ? node.expression
       : node;
 }
 
-function combineNodes(nodes) {
+function combineNodes(types, nodes) {
   let jsxElement;
   const newNodes = nodes.filter((n) => !(types.isJSXText(n) && n.value.trim() === ''));
   switch (newNodes.length) {
@@ -26,15 +24,15 @@ function combineNodes(nodes) {
       jsxElement = types.nullLiteral();
       break;
     case 1:
-      jsxElement = safeNode(newNodes[0]);
+      jsxElement = safeNode(types, newNodes[0]);
       break;
     default:
-      jsxElement = jsxFragment(newNodes);
+      jsxElement = createJSXFragment(types, newNodes);
   }
   return jsxElement;
 }
 
-function getTagNode(nodePath) {
+function getTagNode(types, nodePath) {
   const { node: { openingElement: { attributes, name }, children } } = nodePath;
   if (!attributes.length) {
     throw nodePath.buildCodeFrameError(`<${name.name}> 标签需要一个 value 属性并绑定一个变量或表达式.`);
@@ -49,11 +47,11 @@ function getTagNode(nodePath) {
   }
   return {
     statement: value,
-    node: combineNodes(children)
+    node: combineNodes(types, children)
   };
 }
 
-function createConditionalExpression(args, i) {
+function createConditionalExpression(types, args, i) {
   // eslint-disable-next-line no-plusplus
   const test = args[i++];
   // eslint-disable-next-line no-plusplus
@@ -66,15 +64,15 @@ function createConditionalExpression(args, i) {
     nextTest === null
       ? args[i + 1]
       : nextTest === undefined
-        ? types.nullLiteral() : createConditionalExpression(args, i)
+        ? types.nullLiteral() : createConditionalExpression(types, args, i)
   );
 }
 
-function parseIfTag(nodePath, ELSE_IF_TAG, ELSE_TAG) {
+function parseIfTag(types, nodePath, ELSE_IF_TAG, ELSE_TAG) {
   let canScan = false;
   let nextNodePath = nodePath;
   // 用于构造三目表达式
-  const ifTag = getTagNode(nextNodePath);
+  const ifTag = getTagNode(types, nextNodePath);
   const statementArgs = [ifTag.statement, ifTag.node];
   do {
     canScan = false;
@@ -86,14 +84,14 @@ function parseIfTag(nodePath, ELSE_IF_TAG, ELSE_TAG) {
       // else if 或者 else 情况
       switch (nextNodePath.node.openingElement.name.name) {
         case ELSE_IF_TAG: {
-          const elifTag = getTagNode(nextNodePath);
+          const elifTag = getTagNode(types, nextNodePath);
           canScan = true;
           statementArgs.push(elifTag.statement, elifTag.node);
           nextNodePath.remove();
           break;
         }
         case ELSE_TAG: {
-          statementArgs.push(null, combineNodes(nextNodePath.node.children));
+          statementArgs.push(null, combineNodes(types, nextNodePath.node.children));
           nextNodePath.remove();
           break;
         }
@@ -109,7 +107,7 @@ function parseIfTag(nodePath, ELSE_IF_TAG, ELSE_TAG) {
   } while (canScan);
 
   // 创建条件语句
-  const ifExp = createConditionalExpression(statementArgs, 0);
+  const ifExp = createConditionalExpression(types, statementArgs, 0);
   if (nodePath.parentPath.isJSXElement()) {
     nodePath.replaceWith(types.jsxExpressionContainer(ifExp));
   } else {
