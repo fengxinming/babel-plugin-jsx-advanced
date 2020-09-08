@@ -1,1 +1,41 @@
-test
+
+const jsxMethods = [
+  'jsxAttribute',
+  'jSXAttribute',
+
+  'jsxExpressionContainer',
+  'jSXExpressionContainer',
+
+  'jsxIdentifier',
+  'jSXIdentifier'
+];
+
+function compat6(types) {
+  for (let i = 0, len = jsxMethods.length; i < len; i++) {
+    const alias = jsxMethods[i];
+    types[alias] = types[jsxMethods[++i]];
+  }
+
+  types.jsxFragment = function (openingFragment, closingFragment, children) {
+    return types.jSXElement(openingFragment, closingFragment, children);
+  };
+
+  types.jsxOpeningFragment = function () {
+    return types.jSXOpeningElement(
+      types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment')),
+      []
+    );
+  };
+
+  types.jsxClosingFragment = function () {
+    return types.jSXClosingElement(
+      types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment'))
+    );
+  };
+}
+
+module.exports = function ({ version, types }, options) {
+  // 兼容babel 6
+  if (+version[0] < 7) {
+    compat6(types);
+  }
