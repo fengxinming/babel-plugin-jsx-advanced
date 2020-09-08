@@ -2,7 +2,7 @@
 
 [![npm package](https://nodei.co/npm/babel-plugin-jsx-advanced.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/babel-plugin-jsx-advanced)
 
-> jsx指令扩展和标签扩展
+> jsx指令扩展和标签扩展，兼容babel 6.x 和 7.x
 
 ## 安装
 
@@ -74,15 +74,25 @@ module.exports = {
 ### 配置参数
 
 * `prefix` - 指令前缀，默认为`'x-'`；
-* `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
-* `supportIf` - 是否支持`${prefix}if`指令，默认开启；
-* `supportClass` - 是否支持`${prefix}class`指令，默认开启；
-* `supportShow` - 是否支持`${prefix}show`指令，默认开启；
-* `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
+
+* `elifAlias` - elif标签或者指令别名，如：修改为`else-if`，默认为`elif`；
+
 * `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
-* `elifAlias` - elif标签或者指令别名，可修改为`'else-if'`，默认为`'elif'`
-* `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__classHelper__'`；
+
 * `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/show-helper'`；
+
+* `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
+
+* `supportIf` - 是否支持`${prefix}if`指令，默认开启；
+
+* `supportClass` - 是否支持`${prefix}class`指令，默认开启；
+
+* `supportShow` - 是否支持`${prefix}show`指令，默认开启；
+
+* `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
+
+* `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__classHelper__'`；
+
 * `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__showHelper__'`。
 
 ## 使用

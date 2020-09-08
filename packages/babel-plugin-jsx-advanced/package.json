@@ -1,7 +1,7 @@
 {
   "name": "babel-plugin-jsx-advanced",
-  "version": "1.0.2",
-  "description": "jsx特性扩展",
+  "version": "1.0.3",
+  "description": "A babel plugin for jsx advanced Features",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
