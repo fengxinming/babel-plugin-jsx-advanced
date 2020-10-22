@@ -6,8 +6,8 @@ module.exports = {
       jsx: true
     }
   },
-  plugins: ['@ali/jsx-directive'],
+  plugins: ['jsx-advanced'],
   rules: {
-    '@ali/jsx-directive/jsx-uses-i-for': 2
+    'jsx-advanced/jsx-uses-i-for': 2
   }
 };
