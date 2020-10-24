@@ -1,7 +1,13 @@
+# eslint-plugin-jsx-advanced
+
+## Usage
+
+.eslintrc
+
 ```js
 {
   "extends": [
-    "plugin:@ali/jsx-directive/recommended"
+    "plugin:jsx-advanced/recommended"
   ]
 }
 ```
