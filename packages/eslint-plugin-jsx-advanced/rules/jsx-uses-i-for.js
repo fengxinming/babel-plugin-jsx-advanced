@@ -52,10 +52,10 @@ e.g.:
     }
   },
 
-  create: function (context) {
+  create(context) {
     let iForVars = null;
     return {
-      'Program:exit'() {
+      'Program:exit': function () {
         if (iForVars) {
           iForVars.length && addDeclaredVariables(context, iForVars);
           iForVars = null;

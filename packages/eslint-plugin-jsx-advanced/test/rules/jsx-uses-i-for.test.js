@@ -33,13 +33,6 @@ ruleTester.run('jsx-uses-i-for', rule, {
 e.g.: 
   i-for={(item, index) in items}
   i-for={item in items}
-`,
-          missingIn: `Missing a 'in' syntax for i-for.
-缺少 in 关键字语法对于 i-for 指令。
-
-e.g.: 
-  i-for={(item, index) in items}
-  i-for={item in items}
 `
         }
       ]
