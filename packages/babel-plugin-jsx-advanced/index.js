@@ -1,14 +1,21 @@
 'use strict';
 
-const parseIfTag = require('./parse/if');
 const parseClassDirective = require('./parse/x-class');
+const parseForDirective = require('./parse/x-for');
 const parseHtmlDirective = require('./parse/x-html');
 const parseIfDirective = require('./parse/x-if');
 const parseShowDirective = require('./parse/x-show');
+const parseIfTag = require('./parse/if');
 
 const DEFAULT_IF_TAG = 'if';
 const DEFAULT_ELSE_IF_TAG = 'elif';
 const DEFAULT_ELSE_TAG = 'else';
+
+function checkDirectiveValue(nodePath, directive) {
+  if (directive.value === null) {
+    throw nodePath.get('openingElement').get(`attributes.${directive.key}`).buildCodeFrameError(`'${directive.name}' 指令需要绑定一个变量或表达式.`);
+  }
+}
 
 function getDirectiveNames({
   prefix,
@@ -79,25 +86,33 @@ const jsxMethods = [
 function compat6(types) {
   for (let i = 0, len = jsxMethods.length; i < len; i++) {
     const alias = jsxMethods[i];
-    types[alias] = types[jsxMethods[++i]];
+    if (!types[alias]) {
+      types[alias] = types[jsxMethods[++i]];
+    }
   }
 
-  types.jsxFragment = function (openingFragment, closingFragment, children) {
-    return types.jSXElement(openingFragment, closingFragment, children);
-  };
+  if (!types.jsxFragment) {
+    types.jsxFragment = function (openingFragment, closingFragment, children) {
+      return types.jSXElement(openingFragment, closingFragment, children);
+    };
+  }
 
-  types.jsxOpeningFragment = function () {
-    return types.jSXOpeningElement(
-      types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment')),
-      []
-    );
-  };
+  if (!types.jsxOpeningFragment) {
+    types.jsxOpeningFragment = function () {
+      return types.jSXOpeningElement(
+        types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment')),
+        []
+      );
+    };
+  }
 
-  types.jsxClosingFragment = function () {
-    return types.jSXClosingElement(
-      types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment'))
-    );
-  };
+  if (!types.jsxClosingFragment) {
+    types.jsxClosingFragment = function () {
+      return types.jSXClosingElement(
+        types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment'))
+      );
+    };
+  }
 }
 
 module.exports = function ({ version, types }, options) {
@@ -174,6 +189,7 @@ module.exports = function ({ version, types }, options) {
         // 匹配需要处理的指令
         const directiveNodes = getDirectiveNodes(types, directiveNames, attributes);
         const {
+          forDirective,
           ifDirective,
           elifDirective,
           elseDirective,
@@ -181,12 +197,22 @@ module.exports = function ({ version, types }, options) {
           showDirective,
           htmlDirective
         } = directiveNodes;
+        
+        // 处理for指令
+        if (forDirective) {
+          checkDirectiveValue(nodePath, forDirective);
+          parseForDirective(
+            types,
+            nodePath,
+            forDirective,
+            forHelperAlias
+          );
+          state.__iotHelpers.set(forHelperAlias, forHelper);
+        }
 
         // 处理if指令
         if (ifDirective) {
-          if (ifDirective.value === null) {
-            throw nodePath.get('openingElement').get(`attributes.${ifDirective.key}`).buildCodeFrameError(`'${ifDirective.name}' 指令需要绑定一个变量或表达式.`);
-          }
+          checkDirectiveValue(nodePath, ifDirective);
           parseIfDirective(
             types,
             nodePath,
@@ -203,9 +229,7 @@ module.exports = function ({ version, types }, options) {
 
         // 处理class指令
         if (classDirective) {
-          if (classDirective.value === null) {
-            throw nodePath.get('openingElement').get(`attributes.${classDirective.key}`).buildCodeFrameError(`'${classDirective.name}' 指令需要绑定一个变量或表达式.`);
-          }
+          checkDirectiveValue(nodePath, classDirective);
           parseClassDirective(
             types,
             attributes,
@@ -218,9 +242,7 @@ module.exports = function ({ version, types }, options) {
 
         // 处理show指令
         if (showDirective) {
-          if (showDirective.value === null) {
-            throw nodePath.get('openingElement').get(`attributes.${showDirective.key}`).buildCodeFrameError(`'${showDirective.name}' 指令需要绑定一个变量或表达式.`);
-          }
+          checkDirectiveValue(nodePath, showDirective);
           parseShowDirective(
             types,
             attributes,
@@ -233,9 +255,7 @@ module.exports = function ({ version, types }, options) {
 
         // 处理html指令
         if (htmlDirective) {
-          if (htmlDirective.value === null) {
-            throw nodePath.get('openingElement').get(`attributes.${htmlDirective.key}`).buildCodeFrameError(`'${htmlDirective.name}' 指令需要绑定一个变量或表达式.`);
-          }
+          checkDirectiveValue(nodePath, htmlDirective);
           parseHtmlDirective(
             types,
             attributes,
