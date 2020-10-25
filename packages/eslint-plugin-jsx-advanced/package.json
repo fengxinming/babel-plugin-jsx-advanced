@@ -24,10 +24,10 @@
     "jsx-ast-utils": "^3.1.0"
   },
   "peerDependencies": {
-    "eslint": "^3 || ^4 || ^5 || ^6 || ^7"
+    "eslint": "^5 || ^6 || ^7"
   },
   "devDependencies": {
-    "eslint": "^3 || ^4 || ^5 || ^6 || ^7",
+    "eslint": "^5 || ^6 || ^7",
     "jest": "^26.6.1"
   }
 }
