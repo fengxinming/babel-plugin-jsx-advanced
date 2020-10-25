@@ -239,7 +239,7 @@ function MyComponent({ isShown }) {
 }
 ```
 
-### i-html 指令
+### i-html
 
 **更新元素的 `innerHTML`**
 
