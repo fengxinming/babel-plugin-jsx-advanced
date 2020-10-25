@@ -2,7 +2,7 @@
 
 module.exports = {
   rules: {
-    'jsx-uses-i-for': require('./rules/jsx-uses-i-for')
+    'jsx-uses-x-for': require('./rules/jsx-uses-x-for')
   },
   processors: {},
   configs: {

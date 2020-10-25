@@ -25,9 +25,11 @@ export default {
   // },
   output: [{
     dir: 'dist/es',
-    format: 'es'
+    format: 'es',
+    exports: 'auto'
   }, {
     dir: 'dist',
-    format: 'cjs'
+    format: 'cjs',
+    exports: 'auto'
   }]
 };

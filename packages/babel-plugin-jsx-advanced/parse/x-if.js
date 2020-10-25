@@ -69,7 +69,8 @@ module.exports = function (types, nodePath, simpleIfNode, xElif, xElse) {
     } else if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
       // 空白节点 换行符
       canScan = true;
-    } else if (nextNodePath.isJSXExpressionContainer() && types.isJSXEmptyExpression(nextNodePath.node.expression)) {
+    } else if (nextNodePath.isJSXExpressionContainer() &&
+              types.isJSXEmptyExpression(nextNodePath.node.expression)) {
       // 空表达式
       nextNodePath.remove();
       canScan = true;

@@ -13,9 +13,5 @@ module.exports = {
     'configs/*',
     'rules/*',
     'utils/*'
-  ],
-  transform: {
-    '^.+\\.js$': 'babel-jest'
-  },
-  transformIgnorePatterns: ['/node_modules/']
+  ]
 };

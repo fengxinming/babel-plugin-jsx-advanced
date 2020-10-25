@@ -8,6 +8,6 @@ module.exports = {
   },
   plugins: ['jsx-advanced'],
   rules: {
-    'jsx-advanced/jsx-uses-i-for': 2
+    'jsx-advanced/jsx-uses-x-for': 2
   }
 };

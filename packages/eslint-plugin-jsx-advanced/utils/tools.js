@@ -1,3 +1,6 @@
+/* eslint-disable no-new-func */
+/* eslint-disable no-new */
+
 'use strict';
 
 const eslintScope = require('eslint-scope');
@@ -36,7 +39,7 @@ module.exports = {
     });
 
     globalScope.through = globalScope.through.filter(reference => {
-      const name = reference.identifier.name;
+      const { name } = reference.identifier;
       const variable = globalScope.set.get(name);
 
       if (variable) {

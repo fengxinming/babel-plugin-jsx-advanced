@@ -19,6 +19,7 @@ function checkDirectiveValue(nodePath, directive) {
 
 function getDirectiveNames({
   prefix,
+  supportFor,
   supportIf,
   supportClass,
   supportShow,
@@ -26,6 +27,9 @@ function getDirectiveNames({
   elifAlias
 }) {
   const names = Object.create(null);
+  if (supportFor !== false) {
+    names.forDirective = `${prefix}for`;
+  }
   if (supportIf !== false) {
     names.ifDirective = `${prefix}if`;
     names.elifDirective = `${prefix}${elifAlias}`;
@@ -132,8 +136,10 @@ module.exports = function ({ version, types }, options) {
   const {
     classHelper = 'celia.classnames',
     showHelper = 'babel-plugin-jsx-advanced-helper/show-helper',
-    classHelperAlias = '__classHelper__',
-    showHelperAlias = '__showHelper__',
+    forHelper = 'babel-plugin-jsx-advanced-helper/for-helper',
+    classHelperAlias = '__class_helper__',
+    showHelperAlias = '__show_helper__',
+    forHelperAlias = '__for_helper__',
     supportIfTag,
     elifAlias
   } = options;
@@ -197,7 +203,7 @@ module.exports = function ({ version, types }, options) {
           showDirective,
           htmlDirective
         } = directiveNodes;
-        
+
         // 处理for指令
         if (forDirective) {
           checkDirectiveValue(nodePath, forDirective);
@@ -207,7 +213,7 @@ module.exports = function ({ version, types }, options) {
             forDirective,
             forHelperAlias
           );
-          state.__iotHelpers.set(forHelperAlias, forHelper);
+          state.__directiveHelpers.set(forHelperAlias, forHelper);
         }
 
         // 处理if指令

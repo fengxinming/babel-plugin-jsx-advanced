@@ -1,10 +1,10 @@
 {
   "name": "babel-plugin-jsx-advanced",
-  "version": "1.0.3",
+  "version": "1.1.0",
   "description": "A babel plugin for jsx advanced Features",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "release": "npm publish"
   },
   "repository": {
     "type": "git",
@@ -19,6 +19,7 @@
   "author": "Jesse Feng <fxm0016@126.com>",
   "license": "MIT",
   "dependencies": {
-    "babel-plugin-jsx-advanced-helper": "^1.0.1"
+    "babel-plugin-jsx-advanced-helper": "^1.1.1",
+    "eslint-plugin-jsx-advanced": "^1.0.0"
   }
 }

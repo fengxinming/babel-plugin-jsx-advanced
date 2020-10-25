@@ -71,7 +71,19 @@ module.exports = {
 }
 ```
 
-### 配置参数
+### 修改eslint配置
+
+**.eslintrc**
+
+```js
+{
+  "extends": [
+    "plugin:jsx-advanced/recommended"
+  ]
+}
+```
+
+### 配置参数详情
 
 * `prefix` - 指令前缀，默认为`'x-'`；
 
@@ -79,9 +91,13 @@ module.exports = {
 
 * `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
 
+* `forHelper` - `${prefix}for`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/for-helper'`；
+
 * `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/show-helper'`；
 
 * `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
+
+* `supportFor` - 是否支持`${prefix}for`指令，默认开启；
 
 * `supportIf` - 是否支持`${prefix}if`指令，默认开启；
 
@@ -91,214 +107,149 @@ module.exports = {
 
 * `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
 
-* `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__classHelper__'`；
+* `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__class_helper__'`；
 
-* `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__showHelper__'`。
+* `forHelperAlias` - `${prefix}for`指令的辅助函数变量名，默认为`'__for_helper__'`；
+
+* `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__show_helper__'`。
 
 ## 使用
 
-### if/elif/else 标签
+### x-for
 
-**单个if标签情况**
+**基于源数据多次渲染元素或模板块，在使用该指令之值，必须使用特定语法 alias in expression，为当前遍历的元素提供别名**
+
 ```jsx
-function render() {
+function MyComponent({ items }) {
   return (
-    <div>
-      <if value={state === 1}>
-        <input name="num" />
-        <button>购买</button>
-      </if>
-    </div>
+    <ul>
+      <li x-for={(item, index) in items} key={index}>
+        {item}
+      </li>
+    </ul>
   );
 }
 ```
-> 等价于
-```jsx
-function render() {
-	return <div>
-      {state === 1 ? <><input name="num" /><button>购买</button></> : null}
-    </div>;
-}
-```
 
-**if和else标签结合使用情况**
+### x-if
+
+**根据表达式的值的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 来有条件地渲染元素**
 ```jsx
-function render() {
+function MyComponent({ role }) {
   return (
-    <div>
-      <if value={state === 1}>
-        <input name="num" />
-        <button>购买</button>
-      </if>
-      <elif value={state === 2}>
-        <div>内容1</div>
-        <div>内容2</div>
-        <div>内容3</div>
-      </elif>
-      <else>
-        警告
-      </else>
-    </div>
+    <>
+      <button type="button">新增</button>
+      <button type="button">编辑</button>
+      <button x-if={role === 'admin'} type="button">删除</button>
+    </>
   );
 }
 ```
-> 等价于
-```jsx
-function render() {
-	return (
-		<div>
-		  {state === 1 ? <><input name="num" /><button>购买</button></> : state === 2 ? <><div>内容1</div><div>内容2</div><div>内容3</div></> : <>
-        警告
-      </>}
-		</div>
-	);
-}
-```
 
-### i-if/i-elif/i-else 指令
+### x-else
 
-**单个i-if指令情况**
-```jsx
-function render() {
-	return (
-	  <div>
-		<button i-if={state === 1}>新增</button>
-	  </div>
-	);
-}
-```
-> 等价于
-```jsx
-function render() {
-	return <div>
-      {state === 1 ? <button>新增</button> : null}
-    </div>;
-}
-```
+**前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
 
-**i-if和i-else指令结合使用情况**
 ```jsx
-function render() {
+function MyComponent({ role, items }) {
   return (
-    <div>
-      <span i-if={state === 1}>处理中</span>
-      <span i-elif={state === 2}>处理完成</span>
-      <span i-else>状态异常</span>
-    </div>
-  );
-}
-```
-> 等价于
-```jsx
-function render() {
-	return (
-		<div>
-		  {state === 1 ? <span>处理中</span> : state === 2 ? <span>处理完成</span> : <span>状态异常</span>}
-		</div>
-	);
-}
-```
-
-**if标签和i-if指令混合使用情况**
-```jsx
-function render() {
-  return (
-    <div>
-      <if value={statement}>
-        <div>if tag</div>
-      </if>
-      <elif value={another}>
-        <div>else if tag</div>
-        <div i-if={statement}>nest if</div>
-        <div i-elif={another}>nest else if</div>
-      </elif>
-    </div>
-  );
-}
-```
-> 等价于
-```jsx
-function render() {
-	return (
-		<div>
-		  {statement ? <div>if tag</div> : another ? <><div>else if tag</div>statement ? <div>nest if</div> : another ? <div>nest else if</div> : null</> : null}
-		</div>
-	);
-}
-```
-
-### i-class 指令
-
-```jsx
-function render() {
-  return (
-    <div>
-      <div i-class={{
-        red: state === 1,
-        green: state === 2,
-        blue: state === 3
-      }}></div>
-      <div i-class={['red', 'green', 'blue']} />
-    </div>
-  );
-}
-```
-> 等价于
-```jsx
-import __classHelper__ from "celia.classnames";
-
-function render() {
-	return <div>
-      <div className={__classHelper__({
-      red: state === 1,
-      green: state === 2,
-      blue: state === 3
-    })}></div>
-      <div className={__classHelper__(['red', 'green', 'blue'])} />
-    </div>;
-}
-```
-
-### i-show 指令
-
-```jsx
-function render() {
-  return (
-    <div>
-      <p i-show={state === 1}>
-        内容1
+    <>
+      <table x-if={role === 'admin'}>
+        <thead />
+        <tbody>
+          <tr x-for={(item, index) in items} key={index}>
+            <td>{item}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p x-else>
+        无权限访问
       </p>
-    </div>
+    </>
   );
 }
 ```
-> 等价于
-```jsx
-import __showHelper__ from "babel-plugin-jsx-advanced/show-helper";
 
-function render() {
-	return <div>
-      <p style={__showHelper__(null, state === 1)}>
-        内容1
+### x-elif
+
+**前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
+
+```jsx
+function MyComponent({ status }) {
+  return (
+    <>
+      <span x-if={status === 0}>初始化</span>
+      <span x-elif={status === 1}>准备中</span>
+      <span x-elif={status === 2}>发送中</span>
+      <span x-elif={status === 3}>接收中</span>
+      <span x-elif={status === 3}>完成</span>
+      <span x-else>
+        异常&nbsp;&nbsp;
+        <a href>重试</a>
+      </span>
+    </>
+  );
+}
+```
+
+### i-class
+
+**用于条件渲染 `className`，不能跟 `className` 属性共存**
+
+```jsx
+function MyComponent({ status, text }) {
+  return (
+    <>
+      <p
+        x-class={{
+          default: !status,
+          success: status === 1,
+          error: status === 2,
+          warning: status === 3
+        }}
+      >
+        {text}
       </p>
-    </div>;
+      <p
+        x-class={['info', {
+          default: !status,
+          success: status === 1,
+          error: status === 2,
+          warning: status === 3
+        }]}
+      >
+        {text}
+      </p>
+    </>
+  );
+}
+```
+
+### i-show
+
+**根据表达式之真假值，切换元素的 `display` CSS property**
+
+```jsx
+function MyComponent({ isShown }) {
+  return (
+    <p x-show={isShown}>
+      内容1
+    </p>
+  );
 }
 ```
 
 ### i-html 指令
 
+**更新元素的 `innerHTML`**
+
 ```jsx
-function render() {
+function MyComponent({ html }) {
+  if (!html) {
+    html = '<span>hello</span>';
+  }
   return (
-    <div i-html={html} />
+    <p x-html={html} />
   );
-}
-```
-> 等价于
-```jsx
-function render() {
-	return <div dangerouslySetInnerHTML={{
-    "__html": html
-  }} />;
 }
 ```

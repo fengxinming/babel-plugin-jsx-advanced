@@ -1,7 +1,8 @@
 {
   "extends": [
     "airbnb",
-    "ali/react"
+    "ali/react",
+    "plugin:jsx-advanced/recommended"
   ],
   "plugins": [
     "react-hooks"

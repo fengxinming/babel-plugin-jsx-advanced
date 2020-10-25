@@ -1,79 +1,173 @@
-import React, { useState } from 'react';
+import React from 'react';
 
-function IfTag() {
-  const statement = useState(false);
+function ForAttr({ items }) {
+  return (
+    <ul>
+      <li x-for={(item, index) in items} key={index}>
+        {item}
+      </li>
+    </ul>
+  );
+}
+
+function IfAttr({ role }) {
   return (
     <>
-      <if value={statement}>
-        <h2>标题1</h2>
-        <p>内容1</p>
-      </if>
-      {/* else if */}
-      <elif value={!statement}>
-        <h2>标题2</h2>
-        <p>内容2</p>
-      </elif>
+      <button type="button">新增</button>
+      <button type="button">编辑</button>
+      <button x-if={role === 'admin'} type="button">删除</button>
     </>
   );
 }
 
-function IfAttr() {
-  const statement = useState(1);
+function ElifAttr({ status }) {
   return (
     <>
-      <button x-if={statement === 1} type="button">新增</button>
-      {/* else if */}
-      <button x-elif={statement === 2} type="button">删除</button>
-      <button x-elif={statement === 3} type="button">修改</button>
-      <button x-else type="button" disabled>禁用</button>
+      <span x-if={status === 0}>初始化</span>
+      <span x-elif={status === 1}>准备中</span>
+      <span x-elif={status === 2}>发送中</span>
+      <span x-elif={status === 3}>接收中</span>
+      <span x-elif={status === 3}>完成</span>
+      <span x-else>
+        异常&nbsp;&nbsp;
+        <a href>重试</a>
+      </span>
     </>
   );
 }
 
-function ClassAttr() {
-  const statement = useState(false);
+function ElseAttr({ role, items }) {
   return (
-    <button
-      x-class={{
-        primary: statement,
-        default: statement
-      }}
-      type="button"
-    >
-      新增
-    </button>
-  );
-}
-
-
-function ShowAttr() {
-  const statement = useState(false);
-  return (
-    <div>
-      <button x-show={statement} type="button">新增</button>
-      <p style={{ margin: '10px' }} x-show={statement}>
-        内容1
+    <>
+      <table x-if={role === 'admin'}>
+        <thead />
+        <tbody>
+          <tr x-for={(item, index) in items} key={index}>
+            <td>{item}</td>
+          </tr>
+        </tbody>
+      </table>
+      <p x-else>
+        无权限访问
       </p>
-    </div>
+    </>
   );
 }
 
-function HtmlAttr() {
-  const statement = useState('<span>hello</span>');
+function ClassAttr({ status, text }) {
   return (
-    <div x-html={statement} />
+    <>
+      <p
+        x-class={{
+          default: !status,
+          success: status === 1,
+          error: status === 2,
+          warning: status === 3
+        }}
+      >
+        {text}
+      </p>
+      <p
+        x-class={['info', {
+          default: !status,
+          success: status === 1,
+          error: status === 2,
+          warning: status === 3
+        }]}
+      >
+        {text}
+      </p>
+    </>
   );
 }
 
+
+function ShowAttr({ isShown }) {
+  return (
+    <p x-show={isShown}>
+      内容1
+    </p>
+  );
+}
+
+function HtmlAttr({ html }) {
+  if (!html) {
+    html = '<span>hello</span>';
+  }
+  return (
+    <p x-html={html} />
+  );
+}
+
+function IfTag({ role }) {
+  return (
+    <>
+      <button type="button">查看</button>
+      <if value={role === 'admin'}>
+        <button type="button">新增</button>
+        <button type="button">编辑</button>
+        <button type="button">删除</button>
+      </if>
+    </>
+  );
+}
+
+function ElifTag({ type }) {
+  return (
+    <form>
+      <if value={type === 1}>
+        <input placeholder="用户名" />
+        <input placeholder="密码" />
+      </if>
+      <elif value={type === 2}>
+        <input placeholder="用户名" />
+        <input placeholder="验证码" />
+        <a href>获取验证码</a>
+      </elif>
+      <elif value={type === 3}>
+        <img src="" alt="扫码登录" />
+      </elif>
+    </form>
+  );
+}
+
+function ElseTag({ role, items }) {
+  return (
+    <>
+      <if value={role === 'admin'}>
+        <div>
+          <input />
+          <button type="button">查询</button>
+          <table>
+            <thead />
+            <tbody>
+              <tr x-for={(item, index) in items} key={index}>
+                <td>{item}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </if>
+      <else>
+        无权限访问
+      </else>
+    </>
+  );
+}
 
 export default function () {
   return (
     <div>
-      <IfTag />
+      <ForAttr />
       <IfAttr />
+      <ElifAttr />
+      <ElseAttr />
       <ClassAttr />
       <ShowAttr />
       <HtmlAttr />
+      <IfTag />
+      <ElifTag />
+      <ElseTag />
     </div>
   );
 }
