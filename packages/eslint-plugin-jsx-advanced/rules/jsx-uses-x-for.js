@@ -2,7 +2,7 @@
 
 const { propName } = require('jsx-ast-utils');
 const { isVariable, addDeclaredVariables } = require('../utils/tools');
-const { OPERATOR_IN, X_FOR } = require('../utils/constants');
+const { OPERATOR_IN } = require('../utils/constants');
 
 module.exports = {
   meta: {
@@ -53,6 +53,10 @@ e.g.:
   },
 
   create(context) {
+    const config = (context.settings || {})['jsx-advanced'] || {};
+    const prefix = config.prefix || 'x-';
+    const X_FOR = `${prefix}for`;
+
     let iForVars = null;
     return {
       'Program:exit': function () {

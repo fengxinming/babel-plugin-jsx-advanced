@@ -6,10 +6,25 @@
 
 ## Usage
 
-.eslintrc
+**.eslintrc**
 
 ```js
 {
+  "extends": [
+    "plugin:jsx-advanced/recommended"
+  ]
+}
+```
+
+**if prefix is not `x-`**
+
+```js
+{
+  "settings": {
+    "jsx-advanced": {
+      "prefix": "v-"
+    }
+  },
   "extends": [
     "plugin:jsx-advanced/recommended"
   ]

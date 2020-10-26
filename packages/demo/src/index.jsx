@@ -6,6 +6,7 @@ function ForAttr({ items }) {
       <li x-for={(item, index) in items} key={index}>
         {item}
       </li>
+      <li x-for={(v, k) in 5} key={k} x-if={k > 3}>{v}</li>
     </ul>
   );
 }

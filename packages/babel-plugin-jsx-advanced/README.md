@@ -83,6 +83,21 @@ module.exports = {
 }
 ```
 
+**如果修改了 prefix，需要同步修改eslint配置**
+
+```js
+{
+  "settings": {
+    "jsx-advanced": {
+      "prefix": "v-"
+    }
+  },
+  "extends": [
+    "plugin:jsx-advanced/recommended"
+  ]
+}
+```
+
 ### 配置参数详情
 
 * `prefix` - 指令前缀，默认为`'x-'`；
