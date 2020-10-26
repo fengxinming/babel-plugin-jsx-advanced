@@ -115,7 +115,7 @@ module.exports = {
 
 ## 使用
 
-### x-for
+### x-for 指令
 
 **基于源数据多次渲染元素或模板块，在使用该指令之值，必须使用特定语法 alias in expression，为当前遍历的元素提供别名**
 
@@ -131,9 +131,10 @@ function MyComponent({ items }) {
 }
 ```
 
-### x-if
+### x-if 指令
 
 **根据表达式的值的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 来有条件地渲染元素**
+
 ```jsx
 function MyComponent({ role }) {
   return (
@@ -146,7 +147,7 @@ function MyComponent({ role }) {
 }
 ```
 
-### x-else
+### x-else 指令
 
 **前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
 
@@ -170,7 +171,7 @@ function MyComponent({ role, items }) {
 }
 ```
 
-### x-elif
+### x-elif 指令
 
 **前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
 
@@ -192,7 +193,7 @@ function MyComponent({ status }) {
 }
 ```
 
-### x-class
+### x-class 指令
 
 **用于条件渲染 `className`，不能跟 `className` 属性共存**
 
@@ -225,7 +226,7 @@ function MyComponent({ status, text }) {
 }
 ```
 
-### x-show
+### x-show 指令
 
 **根据表达式之真假值，切换元素的 `display` CSS property**
 
@@ -239,7 +240,7 @@ function MyComponent({ isShown }) {
 }
 ```
 
-### x-html
+### x-html 指令
 
 **更新元素的 `innerHTML`**
 
@@ -250,6 +251,80 @@ function MyComponent({ html }) {
   }
   return (
     <p x-html={html} />
+  );
+}
+```
+
+### if 标签
+
+**根据表达式的值的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 来有条件地渲染元素，并且不会创建额外的真实DOM**
+
+```jsx
+function MyComponent({ role }) {
+  return (
+    <>
+      <button type="button">查看</button>
+      <if value={role === 'admin'}>
+        <button type="button">新增</button>
+        <button type="button">编辑</button>
+        <button type="button">删除</button>
+      </if>
+    </>
+  );
+}
+```
+
+### elif 标签
+
+**前一个兄弟元素必须包含 `if` 或者 `elif` 标签**
+
+```jsx
+function MyComponent({ type }) {
+  return (
+    <form>
+      <if value={type === 1}>
+        <input placeholder="用户名" />
+        <input placeholder="密码" />
+      </if>
+      <elif value={type === 2}>
+        <input placeholder="用户名" />
+        <input placeholder="验证码" />
+        <a href>获取验证码</a>
+      </elif>
+      <elif value={type === 3}>
+        <img src="" alt="扫码登录" />
+      </elif>
+    </form>
+  );
+}
+```
+
+### else 标签
+
+**前一个兄弟元素必须包含 `if` 或者 `elif` 标签**
+
+```jsx
+function MyComponent({ role, items }) {
+  return (
+    <>
+      <if value={role === 'admin'}>
+        <div>
+          <input />
+          <button type="button">查询</button>
+          <table>
+            <thead />
+            <tbody>
+              <tr x-for={(item, index) in items} key={index}>
+                <td>{item}</td>
+              </tr>
+            </tbody>
+          </table>
+        </div>
+      </if>
+      <else>
+        无权限访问
+      </else>
+    </>
   );
 }
 ```
