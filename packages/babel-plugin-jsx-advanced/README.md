@@ -192,7 +192,7 @@ function MyComponent({ status }) {
 }
 ```
 
-### i-class
+### x-class
 
 **用于条件渲染 `className`，不能跟 `className` 属性共存**
 
@@ -225,7 +225,7 @@ function MyComponent({ status, text }) {
 }
 ```
 
-### i-show
+### x-show
 
 **根据表达式之真假值，切换元素的 `display` CSS property**
 
@@ -239,7 +239,7 @@ function MyComponent({ isShown }) {
 }
 ```
 
-### i-html
+### x-html
 
 **更新元素的 `innerHTML`**
 
