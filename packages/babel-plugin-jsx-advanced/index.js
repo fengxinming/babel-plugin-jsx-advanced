@@ -214,6 +214,8 @@ module.exports = function ({ version, types }, options) {
             forHelperAlias
           );
           state.__directiveHelpers.set(forHelperAlias, forHelper);
+          attributes.splice(forDirective.key, 1);
+          return;
         }
 
         // 处理if指令
