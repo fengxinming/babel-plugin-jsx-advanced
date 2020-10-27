@@ -12,7 +12,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengxinming/babel-plugins/tree/master/packages/babel-plugin-jsx-advanced"
+    "url": "https://github.com/fengxinming/babel-plugins/tree/master/packages/eslint-plugin-jsx-advanced"
   },
   "keywords": [
     "babel-plugin-jsx-advanced",
