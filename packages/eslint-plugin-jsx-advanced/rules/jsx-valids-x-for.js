@@ -7,49 +7,12 @@ const { OPERATOR_IN } = require('../utils/constants');
 module.exports = {
   meta: {
     docs: {
-      description: 'a valid expression for x-for',
+      description: 'enforce valid `x-for` directives in jsx',
       category: 'Possible Errors',
       recommended: true
     },
     fixable: null, // or "code" or "whitespace"
-    schema: [],
-    messages: {
-      missingExp: `Missing a expression for x-for.
-缺少表达式对于 x-for 指令。
-
-e.g.: 
-  x-for={(item, index) in items}
-  x-for={item in items}
-`,
-      missingIn: `Missing a 'in' syntax for x-for.
-缺少 in 关键字语法对于 x-for 指令。
-
-e.g.: 
-  x-for={(item, index) in items}
-  x-for={item in items}
-`,
-      missingVars: `Missing variable declarations for x-for.
-缺少变量定义对于 x-for 指令。
-
-e.g.: 
-  x-for={(item, index) in items}
-  x-for={item in items}
-`,
-      missingSpaceBeforeIn: `Missing space before 'in' syntax for x-for.
-在 in 关键字语法前缺少空格对于 x-for 指令。
-
-e.g.: 
-  x-for={(item, index) in items}
-  x-for={item in items}
-`,
-      missingSpaceAfterIn: `Missing space after 'in' syntax for x-for.
-在 in 关键字语法后缺少空格对于 x-for 指令。
-
-e.g.: 
-  x-for={(item, index) in items}
-  x-for={item in items}
-`
-    }
+    schema: []
   },
 
   create(context) {
@@ -57,12 +20,12 @@ e.g.:
     const prefix = config.prefix || 'x-';
     const X_FOR = `${prefix}for`;
 
-    let iForVars = null;
+    let xForVars = null;
     return {
       'Program:exit': function () {
-        if (iForVars) {
-          iForVars.length && addDeclaredVariables(context, iForVars);
-          iForVars = null;
+        if (xForVars) {
+          xForVars.length && addDeclaredVariables(context, xForVars);
+          xForVars = null;
         }
       },
       JSXAttribute(node) {
@@ -97,9 +60,9 @@ e.g.:
 
           if (tokensLeftVars.length) {
             // 暂存变量用于放入当前作用域
-            iForVars = [
+            xForVars = [
               ...new Set([
-                ...(iForVars || []),
+                ...(xForVars || []),
                 ...tokensLeftVars.map(i => i.value)
               ])
             ];
@@ -109,7 +72,13 @@ e.g.:
               (tokensVarExpBeforeIn.length && tokensVarExpBeforeIn[0]) || tokenLeftBrace;
             context.report({
               node: tokenInvalid,
-              messageId: 'missingVars',
+              message: `Missing variable declarations for ${X_FOR}.
+缺少变量定义对于 ${X_FOR} 指令。
+
+e.g.: 
+  ${X_FOR}={(item, index) in items}
+  ${X_FOR}={item in items}
+`,
               loc: tokenInvalid.loc
             });
           }
@@ -119,29 +88,53 @@ e.g.:
           // 没有表达式的情况
           context.report({
             node,
-            messageId: 'missingExp',
+            message: `Missing a expression for ${X_FOR}.
+缺少表达式对于 ${X_FOR} 指令。
+
+e.g.: 
+  ${X_FOR}={(item, index) in items}
+  ${X_FOR}={item in items}
+`,
             loc: node.loc
           });
         } else if (!tokenOperatorIn) {
           // 没有 in 关键字
           context.report({
             node,
-            messageId: 'missingIn',
+            message: `Missing a 'in' syntax for ${X_FOR}.
+缺少 in 关键字语法对于 ${X_FOR} 指令。
+
+e.g.: 
+  ${X_FOR}={(item, index) in items}
+  ${X_FOR}={item in items}
+`,
             loc: node.loc
           });
         } else if (!sourceCode.isSpaceBetweenTokens(tokenBeforeIn, tokenOperatorIn)) {
           // in 关键字左边需要有空格
           context.report({
             tokenOperatorIn,
-            messageId: 'missingSpaceBeforeIn',
-            loc: tokenOperatorIn.loc
+            loc: tokenOperatorIn.loc,
+            message: `Missing space before 'in' syntax for ${X_FOR}.
+在 in 关键字语法前缺少空格对于 ${X_FOR} 指令。
+
+e.g.: 
+  ${X_FOR}={(item, index) in items}
+  ${X_FOR}={item in items}
+`
           });
         } else if (!sourceCode.isSpaceBetweenTokens(tokenOperatorIn, tokenAfterIn)) {
           // in 关键字右边边需要有空格
           context.report({
             tokenOperatorIn,
-            messageId: 'missingSpaceAfterIn',
-            loc: tokenOperatorIn.loc
+            loc: tokenOperatorIn.loc,
+            message: `Missing space after 'in' syntax for ${X_FOR}.
+在 in 关键字语法后缺少空格对于 ${X_FOR} 指令。
+
+e.g.: 
+  ${X_FOR}={(item, index) in items}
+  ${X_FOR}={item in items}
+`
           });
         }
       }

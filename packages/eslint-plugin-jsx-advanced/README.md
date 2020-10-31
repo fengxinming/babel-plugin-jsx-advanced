@@ -22,7 +22,8 @@
 {
   "settings": {
     "jsx-advanced": {
-      "prefix": "v-"
+      "prefix": "v-",
+      "elifAlias": "else-if"
     }
   },
   "extends": [

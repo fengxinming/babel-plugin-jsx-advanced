@@ -8,6 +8,8 @@ module.exports = {
   },
   plugins: ['jsx-advanced'],
   rules: {
-    'jsx-advanced/jsx-uses-x-for': 2
+    'jsx-advanced/jsx-valids-x-for': 2,
+    'jsx-advanced/jsx-valids-x-elif': 2,
+    'jsx-advanced/jsx-valids-x-else': 2
   }
 };

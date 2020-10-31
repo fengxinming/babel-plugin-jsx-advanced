@@ -24,6 +24,14 @@ module.exports = {
     return true;
   },
 
+  isJSXText(node) {
+    return node && node.type === 'JSXText';
+  },
+
+  isJSXElement(node) {
+    return node && node.type === 'JSXElement';
+  },
+
   addDeclaredVariables(context, vars) {
     const globalScope = context.getScope();
     vars.forEach(id => {

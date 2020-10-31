@@ -2,7 +2,9 @@
 
 module.exports = {
   rules: {
-    'jsx-uses-x-for': require('./rules/jsx-uses-x-for')
+    'jsx-valids-x-for': require('./rules/jsx-valids-x-for'),
+    'jsx-valids-x-elif': require('./rules/jsx-valids-x-elif'),
+    'jsx-valids-x-else': require('./rules/jsx-valids-x-else')
   },
   processors: {},
   configs: {
