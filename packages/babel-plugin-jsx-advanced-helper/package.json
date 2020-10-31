@@ -1,6 +1,6 @@
 {
   "name": "babel-plugin-jsx-advanced-helper",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A collection of helpers for babel-plugin-jsx-advanced",
   "main": "index.js",
   "module": "es/index.js",

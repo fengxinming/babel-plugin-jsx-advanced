@@ -16,7 +16,7 @@
 }
 ```
 
-**if `prefix` is not `x-`**
+**if `prefix` is not `x-` or `elifAlias` is not `elif`**
 
 ```js
 {
