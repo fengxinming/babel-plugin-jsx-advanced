@@ -9,7 +9,7 @@ const { isJSXText, isJSXElement } = require('../utils/tools');
 module.exports = {
   meta: {
     docs: {
-      description: 'enforce valid `x-elif` directives',
+      description: 'enforce valid `x-else` directives',
       category: 'Possible Errors',
       recommended: true
     },

@@ -2,9 +2,9 @@
 
 module.exports = {
   rules: {
-    'jsx-valids-x-for': require('./rules/jsx-valids-x-for'),
-    'jsx-valids-x-elif': require('./rules/jsx-valids-x-elif'),
-    'jsx-valids-x-else': require('./rules/jsx-valids-x-else')
+    'valid-x-for': require('./rules/valid-x-for'),
+    'valid-x-elif': require('./rules/valid-x-elif'),
+    'valid-x-else': require('./rules/valid-x-else')
   },
   processors: {},
   configs: {

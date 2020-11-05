@@ -1,8 +1,7 @@
 'use strict';
 
-const rule = require('../../rules/jsx-valids-x-else');
+const rule = require('../../rules/valid-x-elif');
 const { RuleTester } = require('eslint');
-
 
 const ruleTester = new RuleTester({
   parserOptions: {
@@ -13,7 +12,7 @@ const ruleTester = new RuleTester({
     }
   }
 });
-ruleTester.run('jsx-valids-x-else', rule, {
+ruleTester.run('valid-x-elif', rule, {
   valid: [
     {
       code: `
@@ -29,8 +28,18 @@ ruleTester.run('jsx-valids-x-else', rule, {
       code: `
             <div>
                 <div x-if={this.state.foo}>1</div>
+    
                 <div x-elif={this.state.bar}>1</div>
-  
+                <div x-else>1</div>
+            </div>
+          `
+    },
+    {
+      code: `
+            <div>
+                <div x-if={this.state.foo}>1</div>
+                <div x-elif={this.state.bar}>1</div>
+                <div x-elif={this.state.boo}>1</div>
                 <div x-else>1</div>
             </div>
           `
@@ -41,6 +50,7 @@ ruleTester.run('jsx-valids-x-else', rule, {
     {
       code: `
         <div>
+            <div x-elif={this.state.bar}>1</div>
             <div x-else>1</div>
         </div>
       `,
@@ -48,39 +58,41 @@ ruleTester.run('jsx-valids-x-else', rule, {
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+'x-elif' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     },
+
     {
       code: `
           <div>
-              <div x-if={this.state.foo}>1</div>
+              <div x-elif={this.state.bar}>1</div>
+              <div x-elif={this.state.boo}>1</div>
               <div x-else>1</div>
-              <div x-else>2</div>
           </div>
         `,
       errors: [
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+'x-elif' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     },
+
     {
       code: `
-            <div>
-                <div x-if={this.state.foo}>1</div>
-                <div>1</div>
-                <div x-else>2</div>
-            </div>
-          `,
+          <div>
+              <div x-elif={this.state.bar}>1</div>
+              <div x-if={this.state.foo}>1</div>
+              <div x-else>1</div>
+          </div>
+        `,
       errors: [
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+'x-elif' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     }

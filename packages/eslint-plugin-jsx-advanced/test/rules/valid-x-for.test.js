@@ -1,6 +1,6 @@
 'use strict';
 
-const rule = require('../../rules/jsx-valids-x-for');
+const rule = require('../../rules/valid-x-for');
 const { RuleTester } = require('eslint');
 
 const ruleTester = new RuleTester({
@@ -12,7 +12,7 @@ const ruleTester = new RuleTester({
     }
   }
 });
-ruleTester.run('jsx-valids-x-for', rule, {
+ruleTester.run('valid-x-for', rule, {
   valid: [
     {
       code: '<div x-for={(item, key) in foo}>key: {key}, item: {item}</div>'

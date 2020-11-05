@@ -83,13 +83,14 @@ module.exports = {
 }
 ```
 
-**如果修改了 prefix，需要同步修改eslint配置**
+**如果修改了 `prefix` 或 `elifAlias`，需要同步修改eslint配置**
 
 ```js
 {
   "settings": {
     "jsx-advanced": {
-      "prefix": "v-"
+      "prefix": "v-",
+      "elifAlias": "else-if"
     }
   },
   "extends": [
