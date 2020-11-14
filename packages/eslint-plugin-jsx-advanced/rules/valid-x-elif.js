@@ -18,13 +18,13 @@ module.exports = {
   },
 
   create(context) {
+    const config = (context.settings || {})['jsx-advanced'] || {};
+    const prefix = config.prefix || 'x-';
+    const X_ELIF = `${prefix}${config.elifAlias || 'elif'}`;
+    const X_IF = `${prefix}if`;
+
     return {
       JSXElement(node) {
-        const config = (context.settings || {})['jsx-advanced'] || {};
-        const prefix = config.prefix || 'x-';
-        const X_ELIF = `${prefix}${config.elifAlias || 'elif'}`;
-        const X_IF = `${prefix}if`;
-
         if (!hasProp(node.openingElement.attributes, X_ELIF)) {
           return;
         }
