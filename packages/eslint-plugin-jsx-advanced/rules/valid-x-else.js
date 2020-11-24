@@ -9,7 +9,7 @@ const { isJSXText, isJSXElement } = require('../utils/tools');
 module.exports = {
   meta: {
     docs: {
-      description: 'enforce valid `x-else` directives',
+      description: 'enforce valid `x-if`/`x-elif`/`x-else` directives',
       category: 'Possible Errors',
       recommended: true
     },
@@ -26,16 +26,23 @@ module.exports = {
 
     return {
       JSXElement(node) {
-        if (!hasProp(node.openingElement.attributes, X_ELSE)) {
+        let currentAttr;
+
+        if (hasProp(node.openingElement.attributes, X_ELIF)) {
+          currentAttr = X_ELIF;
+        } else if (hasProp(node.openingElement.attributes, X_ELSE)) {
+          currentAttr = X_ELSE;
+        } else {
           return;
         }
 
         const siblings = node.parent && node.parent.children;
-        if (siblings.length < 2) {
+        // 兼容 babel6，可能 siblings 为 undefined
+        if (!siblings || siblings.length < 2) {
           return;
         }
 
-        const attrProp = getProp(node.openingElement.attributes, X_ELSE);
+        const attrProp = getProp(node.openingElement.attributes, currentAttr);
 
         const curIndex = siblings.findIndex((n) => n === node);
 
@@ -58,7 +65,7 @@ module.exports = {
             node: attrProp,
             message: `Missing a jsx element which has a '${X_IF}' or '${X_ELIF}' directive as the previous jsx element.
 
-'${X_ELSE}' 指令需要上一个JSX节点包含 '${X_IF}' 或 '${X_ELIF}' 指令。`,
+'上一个JSX节点需要包含 '${X_IF}' 或 '${X_ELIF}' 指令。`,
             loc: attrProp.loc
           });
         }
