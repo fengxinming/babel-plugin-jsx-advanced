@@ -25,7 +25,7 @@ function IfAttr() {
       {/* else if */}
       <button x-else-if={statement === 2} type="button">删除</button>
       <button x-else-if={statement === 3} type="button">修改</button>
-      <button x-else type="button" disabled>禁用</button>
+      {/* <button x-else type="button" disabled>禁用</button> */}
     </>
   );
 }
