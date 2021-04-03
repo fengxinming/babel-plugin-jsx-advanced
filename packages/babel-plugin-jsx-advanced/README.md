@@ -103,7 +103,7 @@ module.exports = {
 
 * `prefix` - 指令前缀，默认为`'x-'`；
 
-* `elifAlias` - elif标签或者指令别名，如：修改为`else-if`，默认为`elif`；
+* `elifAlias` - `elif`标签或者指令别名，如：修改为`'else-if'`，默认为`'elif'`；
 
 * `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
 
