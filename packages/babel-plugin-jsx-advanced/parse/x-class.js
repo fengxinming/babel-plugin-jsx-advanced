@@ -1,22 +1,20 @@
 'use strict';
 
-module.exports = function (
-  types, attributes, simpleClassNode, simpleClassNameNode, classHelperAlias
-) {
-  // 调用函数处理
-  const callExp = types.callExpression(
-    types.identifier(classHelperAlias),
-    [simpleClassNode.value]
-  );
+module.exports = function (types, attributes, simpleClassNode, simpleClassNameNode, classHelperAlias) {
+  const callExp = (args) => {
+    return types.callExpression(types.identifier(classHelperAlias), args);
+  };
 
-  if (!simpleClassNameNode) {
+  if (!simpleClassNameNode) { // 没有 className 的情况
     attributes.push(
       types.jsxAttribute(
         types.jsxIdentifier('className'),
-        types.jsxExpressionContainer(callExp)
+        types.jsxExpressionContainer(callExp([simpleClassNode.value]))
       )
     );
   } else {
-    simpleClassNameNode.attr.value = types.jsxExpressionContainer(callExp);
+    simpleClassNameNode.attr.value = types.jsxExpressionContainer(
+      callExp([simpleClassNameNode.attr.value, simpleClassNode.value])
+    );
   }
 };
