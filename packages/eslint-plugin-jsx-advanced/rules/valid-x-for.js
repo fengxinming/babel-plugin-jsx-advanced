@@ -7,25 +7,62 @@ const { OPERATOR_IN } = require('../utils/constants');
 module.exports = {
   meta: {
     docs: {
-      description: 'enforce valid `x-for` directives in jsx',
+      description: 'a valid expression for x-for',
       category: 'Possible Errors',
       recommended: true
     },
     fixable: null, // or "code" or "whitespace"
-    schema: []
+    schema: [],
+    messages: {
+      missingExp: `Missing a expression for x-for.
+x-for 指令缺少表达式。
+
+e.g.: 
+  x-for={(item, index) in items}
+  x-for={item in items}
+`,
+      missingIn: `Missing a 'in' syntax for x-for.
+x-for 指令缺少 in 关键字语法。
+
+e.g.: 
+  x-for={(item, index) in items}
+  x-for={item in items}
+`,
+      missingVars: `Missing variable declarations for x-for.
+x-for 指令缺少变量定义。
+
+e.g.: 
+  x-for={(item, index) in items}
+  x-for={item in items}
+`,
+      missingSpaceBeforeIn: `Missing space before 'in' syntax for x-for.
+在 in 关键字语法前缺少空格关于 x-for 指令。
+
+e.g.: 
+  x-for={(item, index) in items}
+  x-for={item in items}
+`,
+      missingSpaceAfterIn: `Missing space after 'in' syntax for x-for.
+在 in 关键字语法后缺少空格关于 x-for 指令。
+
+e.g.: 
+  x-for={(item, index) in items}
+  x-for={item in items}
+`
+    }
   },
 
   create(context) {
-    const config = (context.settings || {})['jsx-advanced'] || {};
-    const prefix = config.prefix || 'x-';
+    const directiveConfig = (context.settings || {})['@ali/jsx-directive'] || {};
+    const prefix = directiveConfig.prefix || 'x-';
     const X_FOR = `${prefix}for`;
 
-    let xForVars = null;
+    let iForVars = null;
     return {
-      'Program:exit': function () {
-        if (xForVars) {
-          xForVars.length && addDeclaredVariables(context, xForVars);
-          xForVars = null;
+      'Program:exit'() {
+        if (iForVars) {
+          iForVars.length && addDeclaredVariables(context, iForVars);
+          iForVars = null;
         }
       },
       JSXAttribute(node) {
@@ -52,33 +89,25 @@ module.exports = {
           tokenAfterIn = sourceCode.getTokenAfter(tokenOperatorIn);
 
           // 在表达式中获取定义的变量
-          const tokensVarExpBeforeIn =
-            sourceCode.getTokensBetween(tokenLeftBrace, tokenOperatorIn) || [];
+          const tokensVarExpBeforeIn = sourceCode.getTokensBetween(tokenLeftBrace, tokenOperatorIn) || [];
           const tokensLeftVars = tokensVarExpBeforeIn.filter(i => {
             return isVariable(i.value);
           });
 
           if (tokensLeftVars.length) {
             // 暂存变量用于放入当前作用域
-            xForVars = [
+            iForVars = [
               ...new Set([
-                ...(xForVars || []),
+                ...(iForVars || []),
                 ...tokensLeftVars.map(i => i.value)
               ])
             ];
           } else {
             // 如果没有定义变量，就给出警告
-            const tokenInvalid =
-              (tokensVarExpBeforeIn.length && tokensVarExpBeforeIn[0]) || tokenLeftBrace;
+            const tokenInvalid = (tokensVarExpBeforeIn.length && tokensVarExpBeforeIn[0]) || tokenLeftBrace;
             context.report({
               node: tokenInvalid,
-              message: `Missing variable declarations for ${X_FOR}.
-缺少变量定义对于 ${X_FOR} 指令。
-
-e.g.: 
-  ${X_FOR}={(item, index) in items}
-  ${X_FOR}={item in items}
-`,
+              messageId: 'missingVars',
               loc: tokenInvalid.loc
             });
           }
@@ -88,53 +117,29 @@ e.g.:
           // 没有表达式的情况
           context.report({
             node,
-            message: `Missing a expression for ${X_FOR}.
-缺少表达式对于 ${X_FOR} 指令。
-
-e.g.: 
-  ${X_FOR}={(item, index) in items}
-  ${X_FOR}={item in items}
-`,
+            messageId: 'missingExp',
             loc: node.loc
           });
         } else if (!tokenOperatorIn) {
           // 没有 in 关键字
           context.report({
             node,
-            message: `Missing a 'in' syntax for ${X_FOR}.
-缺少 in 关键字语法对于 ${X_FOR} 指令。
-
-e.g.: 
-  ${X_FOR}={(item, index) in items}
-  ${X_FOR}={item in items}
-`,
+            messageId: 'missingIn',
             loc: node.loc
           });
         } else if (!sourceCode.isSpaceBetweenTokens(tokenBeforeIn, tokenOperatorIn)) {
           // in 关键字左边需要有空格
           context.report({
             tokenOperatorIn,
-            loc: tokenOperatorIn.loc,
-            message: `Missing space before 'in' syntax for ${X_FOR}.
-在 in 关键字语法前缺少空格对于 ${X_FOR} 指令。
-
-e.g.: 
-  ${X_FOR}={(item, index) in items}
-  ${X_FOR}={item in items}
-`
+            messageId: 'missingSpaceBeforeIn',
+            loc: tokenOperatorIn.loc
           });
         } else if (!sourceCode.isSpaceBetweenTokens(tokenOperatorIn, tokenAfterIn)) {
           // in 关键字右边边需要有空格
           context.report({
             tokenOperatorIn,
-            loc: tokenOperatorIn.loc,
-            message: `Missing space after 'in' syntax for ${X_FOR}.
-在 in 关键字语法后缺少空格对于 ${X_FOR} 指令。
-
-e.g.: 
-  ${X_FOR}={(item, index) in items}
-  ${X_FOR}={item in items}
-`
+            messageId: 'missingSpaceAfterIn',
+            loc: tokenOperatorIn.loc
           });
         }
       }
