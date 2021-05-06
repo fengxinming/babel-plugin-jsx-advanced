@@ -1,0 +1,36 @@
+{
+  "name": "babel-runtime-jsx-advanced-helper",
+  "version": "1.0.0",
+  "description": "A collection of helpers for babel-plugin-jsx-advanced",
+  "main": "index.js",
+  "module": "es/index.js",
+  "sideEffects": false,
+  "scripts": {
+    "build": "rollup -c",
+    "release": "npm run build && npm publish dist"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fengxinming/babel-plugins/tree/master/packages/babel-runtime-jsx-advanced-helper"
+  },
+  "keywords": [
+    "babel",
+    "babel-plugin",
+    "jsx",
+    "babel-plugin-jsx-advanced"
+  ],
+  "author": "Jesse Feng <fxm0016@126.com>",
+  "license": "MIT",
+  "dependencies": {
+    "celia": "^8.0.1",
+    "fast-classnames": "^1.0.0"
+  },
+  "devDependencies": {
+    "rollup": "^2.26.10",
+    "rollup-plugin-combine": "^2.0.1",
+    "rollup-plugin-copy": "^3.3.0",
+    "rollup-plugin-empty": "^1.0.0",
+    "rollup-plugin-match": "^1.0.0",
+    "rollup-plugin-replace-imports": "^1.0.0"
+  }
+}
