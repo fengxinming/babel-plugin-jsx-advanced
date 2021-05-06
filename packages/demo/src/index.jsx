@@ -59,6 +59,7 @@ function ClassAttr({ status, text }) {
   return (
     <>
       <p
+        className="desc"
         x-class={{
           default: !status,
           success: status === 1,

@@ -19,7 +19,8 @@ module.exports = function (types, attributes, simpleShowNode, simpleStyleNode, s
         )
       )
     );
-  } else {
+  }
+  else {
     simpleStyleNode.attr.value = types.jsxExpressionContainer(
       types.callExpression(
         types.identifier(showHelperAlias),

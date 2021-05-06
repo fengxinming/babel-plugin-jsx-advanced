@@ -17,7 +17,8 @@ module.exports = {
 
     try {
       new Function(str, `var ${str}`);
-    } catch (_) {
+    }
+    catch (_) {
       return false;
     }
 
@@ -34,7 +35,7 @@ module.exports = {
 
   addDeclaredVariables(context, vars) {
     const globalScope = context.getScope();
-    vars.forEach(id => {
+    vars.forEach((id) => {
       let variable = globalScope.set.get(id);
 
       if (!variable) {
@@ -46,7 +47,7 @@ module.exports = {
       }
     });
 
-    globalScope.through = globalScope.through.filter(reference => {
+    globalScope.through = globalScope.through.filter((reference) => {
       const { name } = reference.identifier;
       const variable = globalScope.set.get(name);
 

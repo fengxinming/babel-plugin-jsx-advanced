@@ -1,32 +1,7 @@
 {
   "extends": [
-    "airbnb",
-    "ali/react",
+    "fe",
+    "fe/react",
     "plugin:jsx-advanced/recommended"
-  ],
-  "plugins": [
-    "react-hooks"
-  ],
-  "rules": {
-    "semi": [
-      2,
-      "always"
-    ],
-    "space-before-function-paren": [
-      2,
-      {
-        "anonymous": "always",
-        "named": "never",
-        "asyncArrow": "always"
-      }
-    ],
-    "react/jsx-fragments": 0,
-    "comma-dangle": [
-      2,
-      "never"
-    ],
-    "default-case": 0,
-    "no-param-reassign": 0,
-    "no-nested-ternary": 0
-  }
+  ]
 }

@@ -96,11 +96,14 @@ function parseIfTag(types, nodePath, ELSE_IF_TAG, ELSE_TAG) {
           break;
         }
       }
-    } else if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
+    }
+    else if (nextNodePath.isJSXText()
+      && nextNodePath.node.value.trim() === '') {
       // 空白节点 换行符
       canScan = true;
-    } else if (nextNodePath.isJSXExpressionContainer() &&
-              types.isJSXEmptyExpression(nextNodePath.node.expression)) {
+    }
+    else if (nextNodePath.isJSXExpressionContainer()
+      && types.isJSXEmptyExpression(nextNodePath.node.expression)) {
       // 空表达式
       nextNodePath.remove();
       canScan = true;
@@ -111,7 +114,8 @@ function parseIfTag(types, nodePath, ELSE_IF_TAG, ELSE_TAG) {
   const ifExp = createConditionalExpression(types, statementArgs, 0);
   if (nodePath.parentPath.isJSXElement()) {
     nodePath.replaceWith(types.jsxExpressionContainer(ifExp));
-  } else {
+  }
+  else {
     nodePath.replaceWith(ifExp);
   }
 }

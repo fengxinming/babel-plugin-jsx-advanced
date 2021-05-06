@@ -13,7 +13,10 @@ const DEFAULT_ELSE_TAG = 'else';
 
 function checkDirectiveValue(nodePath, directive) {
   if (directive.value === null) {
-    throw nodePath.get('openingElement').get(`attributes.${directive.key}`).buildCodeFrameError(`'${directive.name}' 指令需要绑定一个变量或表达式.`);
+    throw nodePath
+      .get('openingElement')
+      .get(`attributes.${directive.key}`)
+      .buildCodeFrameError(`'${directive.name}' 指令需要绑定一个变量或表达式.`);
   }
 }
 
@@ -134,7 +137,7 @@ module.exports = function ({ version, types }, options) {
   }
   const directiveNames = getDirectiveNames(options);
   const {
-    classHelper = 'celia.classnames',
+    classHelper = 'fast-classnames',
     showHelper = 'babel-plugin-jsx-advanced-helper/show-helper',
     forHelper = 'babel-plugin-jsx-advanced-helper/for-helper',
     classHelperAlias = '__class_helper__',
@@ -158,10 +161,12 @@ module.exports = function ({ version, types }, options) {
           const { body } = nodePath.node;
           const { __directiveHelpers } = state;
           for (const [alias, helper] of __directiveHelpers) {
-            if (!body.some(node => node.type === 'ImportDeclaration' && node.specifiers.some(specifier => specifier.local.name === alias))) {
+            if (!body.some((node) => node.type === 'ImportDeclaration'
+              && node.specifiers.some((specifier) => specifier.local.name === alias))) {
               // 'import alias from helper';
               const importDeclaration = types.importDeclaration(
                 [
+                  // eslint-disable-next-line @babel/new-cap
                   types.ImportDefaultSpecifier(types.identifier(alias))
                 ],
                 types.stringLiteral(helper)
@@ -229,10 +234,15 @@ module.exports = function ({ version, types }, options) {
             directiveNames.elseDirective
           );
           attributes.splice(ifDirective.key, 1);
-        } else if (elifDirective) {
-          throw nodePath.buildCodeFrameError(`'${elifDirective.name}' 指令需要上一个JSX节点包含 '${directiveNames.ifDirective}' 指令.`);
-        } else if (elseDirective) {
-          throw nodePath.buildCodeFrameError(`'${elseDirective.name}' 指令需要上一个JSX节点包含 '${directiveNames.ifDirective}' 或 '${directiveNames.elifDirective}' 指令.`);
+        }
+        else if (elifDirective) {
+          throw nodePath
+            .buildCodeFrameError(`'${elifDirective.name}' 指令需要上一个JSX节点包含 '${directiveNames.ifDirective}' 指令.`);
+        }
+        else if (elseDirective) {
+          throw nodePath
+            // eslint-disable-next-line max-len
+            .buildCodeFrameError(`'${elseDirective.name}' 指令需要上一个JSX节点包含 '${directiveNames.ifDirective}' 或 '${directiveNames.elifDirective}' 指令.`);
         }
 
         // 处理class指令

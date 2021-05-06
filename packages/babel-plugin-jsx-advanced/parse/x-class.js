@@ -12,7 +12,8 @@ module.exports = function (types, attributes, simpleClassNode, simpleClassNameNo
         types.jsxExpressionContainer(callExp([simpleClassNode.value]))
       )
     );
-  } else {
+  }
+  else {
     simpleClassNameNode.attr.value = types.jsxExpressionContainer(
       callExp([simpleClassNameNode.attr.value, simpleClassNode.value])
     );

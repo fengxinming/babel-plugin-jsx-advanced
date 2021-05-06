@@ -52,13 +52,17 @@ module.exports = function (types, nodePath, simpleIfNode, xElif, xElse) {
       if (nextElseIfNode) {
         const { key, value } = nextElseIfNode;
         if (value === null) {
-          throw nextNodePath.get('openingElement').get(`attributes.${key}`).buildCodeFrameError(`'${xElif}' 指令需要绑定一个变量或表达式.`);
+          throw nextNodePath
+            .get('openingElement')
+            .get(`attributes.${key}`)
+            .buildCodeFrameError(`'${xElif}' 指令需要绑定一个变量或表达式.`);
         }
         attributes.splice(key, 1);
         statementArgs.push(value, nextNodePath.node);
         nextNodePath.remove();
         canScan = true;
-      } else { // 可能还有else
+      }
+      else { // 可能还有else
         const nextElseNode = matchDirective(types, xElse, attributes);
         if (nextElseNode) {
           attributes.splice(nextElseNode.key, 1);
@@ -66,11 +70,13 @@ module.exports = function (types, nodePath, simpleIfNode, xElif, xElse) {
           nextNodePath.remove();
         }
       }
-    } else if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
+    }
+    else if (nextNodePath.isJSXText() && nextNodePath.node.value.trim() === '') {
       // 空白节点 换行符
       canScan = true;
-    } else if (nextNodePath.isJSXExpressionContainer() &&
-              types.isJSXEmptyExpression(nextNodePath.node.expression)) {
+    }
+    else if (nextNodePath.isJSXExpressionContainer()
+              && types.isJSXEmptyExpression(nextNodePath.node.expression)) {
       // 空表达式
       nextNodePath.remove();
       canScan = true;
@@ -81,7 +87,8 @@ module.exports = function (types, nodePath, simpleIfNode, xElif, xElse) {
   const ifExp = createConditionalExpression(types, statementArgs, 0);
   if (nodePath.parentPath.isJSXElement()) {
     nodePath.replaceWith(types.jsxExpressionContainer(ifExp));
-  } else {
+  }
+  else {
     nodePath.replaceWith(ifExp);
   }
 };

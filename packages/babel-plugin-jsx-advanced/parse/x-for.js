@@ -10,12 +10,18 @@ module.exports = function (types, nodePath, simpleForNode, forHelperAlias) {
 
     if (types.isSequenceExpression(left)) { // x-for={(item, key) in value}
       params = left.expressions;
-    } else if (types.isIdentifier(left)) { // x-for={item in value}
-      params[params.length] = left;
-    } else {
-      throw nodePath.get('openingElement').get(`attributes.${simpleForNode.key}`).buildCodeFrameError(`'${simpleForNode.name}' 指令需要绑定一个正确的表达式.`);
     }
-  } else {
+    else if (types.isIdentifier(left)) { // x-for={item in value}
+      params[params.length] = left;
+    }
+    else {
+      throw nodePath
+        .get('openingElement')
+        .get(`attributes.${simpleForNode.key}`)
+        .buildCodeFrameError(`'${simpleForNode.name}' 指令需要绑定一个正确的表达式.`);
+    }
+  }
+  else {
     // x-for={value}, x-for={callExp()}, ...
     arr = expression;
   }
@@ -27,7 +33,8 @@ module.exports = function (types, nodePath, simpleForNode, forHelperAlias) {
   );
   if (nodePath.parentPath.isJSXElement()) {
     nodePath.replaceWith(types.jsxExpressionContainer(mapExp));
-  } else {
+  }
+  else {
     nodePath.replaceWith(mapExp);
   }
 };
