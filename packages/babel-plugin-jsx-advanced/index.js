@@ -138,8 +138,8 @@ module.exports = function ({ version, types }, options) {
   const directiveNames = getDirectiveNames(options);
   const {
     classHelper = 'fast-classnames',
-    showHelper = 'babel-plugin-jsx-advanced-helper/show-helper',
-    forHelper = 'babel-plugin-jsx-advanced-helper/for-helper',
+    showHelper = 'babel-runtime-jsx-advanced-helper/show-helper',
+    forHelper = 'babel-runtime-jsx-advanced-helper/for-helper',
     classHelperAlias = '__class_helper__',
     showHelperAlias = '__show_helper__',
     forHelperAlias = '__for_helper__',
