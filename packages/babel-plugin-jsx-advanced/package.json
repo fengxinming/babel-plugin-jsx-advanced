@@ -14,7 +14,8 @@
     "babel",
     "babel-plugin",
     "jsx",
-    "directive"
+    "directive",
+    "babel-plugin-jsx-advanced"
   ],
   "author": "Jesse Feng <fxm0016@126.com>",
   "license": "MIT",
