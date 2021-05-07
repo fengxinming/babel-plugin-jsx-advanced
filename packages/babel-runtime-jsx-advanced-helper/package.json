@@ -11,7 +11,7 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengxinming/babel-plugins/tree/master/packages/babel-runtime-jsx-advanced-helper"
+    "url": "https://github.com/react-hobby/babel-plugins/tree/master/packages/babel-runtime-jsx-advanced-helper"
   },
   "keywords": [
     "babel",
