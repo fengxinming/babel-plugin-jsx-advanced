@@ -7,14 +7,14 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/fengxinming/babel-plugins.git"
+    "url": "git+https://github.com/react-hobby/babel-plugins.git"
   },
   "author": "Jesse Feng",
   "license": "MIT",
   "bugs": {
-    "url": "https://github.com/fengxinming/babel-plugins/issues"
+    "url": "https://github.com/react-hobby/babel-plugins/issues"
   },
-  "homepage": "https://github.com/fengxinming/babel-plugins#readme",
+  "homepage": "https://github.com/react-hobby/babel-plugins#readme",
   "devDependencies": {
     "@babel/core": "^7.14.0",
     "@babel/eslint-parser": "^7.13.14",
