@@ -53,7 +53,7 @@ e.g.:
   },
 
   create(context) {
-    const directiveConfig = (context.settings || {})['@ali/jsx-directive'] || {};
+    const directiveConfig = (context.settings || {})['jsx-advanced'] || {};
     const prefix = directiveConfig.prefix || 'x-';
     const X_FOR = `${prefix}for`;
 
