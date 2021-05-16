@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-jsx-advanced",
-  "version": "1.1.1",
+  "version": "1.1.2",
   "description": "A eslint plugin for using babel-plugin-jsx-advanced",
   "main": "index.js",
   "directories": {
@@ -15,6 +15,7 @@
     "url": "https://github.com/react-hobby/babel-plugins/tree/master/packages/eslint-plugin-jsx-advanced"
   },
   "keywords": [
+    "eslint-plugin-jsx-advanced",
     "babel-plugin-jsx-advanced",
     "eslint-plugin"
   ],

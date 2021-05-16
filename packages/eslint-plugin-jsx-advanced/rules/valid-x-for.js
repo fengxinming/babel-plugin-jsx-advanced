@@ -36,14 +36,14 @@ e.g.:
   x-for={item in items}
 `,
       missingSpaceBeforeIn: `Missing space before 'in' syntax for x-for.
-在 in 关键字语法前缺少空格关于 x-for 指令。
+x-for 指令在 in 关键字语法前缺少空格。
 
 e.g.: 
   x-for={(item, index) in items}
   x-for={item in items}
 `,
       missingSpaceAfterIn: `Missing space after 'in' syntax for x-for.
-在 in 关键字语法后缺少空格关于 x-for 指令。
+x-for 指令在 in 关键字语法后缺少空格。
 
 e.g.: 
   x-for={(item, index) in items}
@@ -90,7 +90,7 @@ e.g.:
 
           // 在表达式中获取定义的变量
           const tokensVarExpBeforeIn = sourceCode.getTokensBetween(tokenLeftBrace, tokenOperatorIn) || [];
-          const tokensLeftVars = tokensVarExpBeforeIn.filter(i => {
+          const tokensLeftVars = tokensVarExpBeforeIn.filter((i) => {
             return isVariable(i.value);
           });
 
@@ -99,10 +99,11 @@ e.g.:
             iForVars = [
               ...new Set([
                 ...(iForVars || []),
-                ...tokensLeftVars.map(i => i.value)
+                ...tokensLeftVars.map((i) => i.value)
               ])
             ];
-          } else {
+          }
+          else {
             // 如果没有定义变量，就给出警告
             const tokenInvalid = (tokensVarExpBeforeIn.length && tokensVarExpBeforeIn[0]) || tokenLeftBrace;
             context.report({
@@ -120,21 +121,24 @@ e.g.:
             messageId: 'missingExp',
             loc: node.loc
           });
-        } else if (!tokenOperatorIn) {
+        }
+        else if (!tokenOperatorIn) {
           // 没有 in 关键字
           context.report({
             node,
             messageId: 'missingIn',
             loc: node.loc
           });
-        } else if (!sourceCode.isSpaceBetweenTokens(tokenBeforeIn, tokenOperatorIn)) {
+        }
+        else if (!sourceCode.isSpaceBetweenTokens(tokenBeforeIn, tokenOperatorIn)) {
           // in 关键字左边需要有空格
           context.report({
             tokenOperatorIn,
             messageId: 'missingSpaceBeforeIn',
             loc: tokenOperatorIn.loc
           });
-        } else if (!sourceCode.isSpaceBetweenTokens(tokenOperatorIn, tokenAfterIn)) {
+        }
+        else if (!sourceCode.isSpaceBetweenTokens(tokenOperatorIn, tokenAfterIn)) {
           // in 关键字右边边需要有空格
           context.report({
             tokenOperatorIn,

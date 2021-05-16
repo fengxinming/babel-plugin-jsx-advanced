@@ -1,6 +1,6 @@
 'use strict';
 
-const rule = require('../../rules/valid-x-else');
+const rule = require('../../rules/valid-x-if');
 const { RuleTester } = require('eslint');
 
 
@@ -48,7 +48,7 @@ ruleTester.run('valid-x-else', rule, {
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+上一个JSX节点需要包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     },
@@ -64,7 +64,7 @@ ruleTester.run('valid-x-else', rule, {
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+上一个JSX节点需要包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     },
@@ -80,7 +80,7 @@ ruleTester.run('valid-x-else', rule, {
         {
           message: `Missing a jsx element which has a 'x-if' or 'x-elif' directive as the previous jsx element.
 
-'x-else' 指令需要上一个JSX节点包含 'x-if' 或 'x-elif' 指令。`
+上一个JSX节点需要包含 'x-if' 或 'x-elif' 指令。`
         }
       ]
     }

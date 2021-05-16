@@ -28,7 +28,7 @@ ruleTester.run('valid-x-for', rule, {
       errors: [
         {
           message: `Missing a expression for x-for.
-缺少表达式对于 x-for 指令。
+x-for 指令缺少表达式。
 
 e.g.: 
   x-for={(item, index) in items}
@@ -42,7 +42,7 @@ e.g.:
       errors: [
         {
           message: `Missing a 'in' syntax for x-for.
-缺少 in 关键字语法对于 x-for 指令。
+x-for 指令缺少 in 关键字语法。
 
 e.g.: 
   x-for={(item, index) in items}
@@ -56,7 +56,7 @@ e.g.:
       errors: [
         {
           message: `Missing variable declarations for x-for.
-缺少变量定义对于 x-for 指令。
+x-for 指令缺少变量定义。
 
 e.g.: 
   x-for={(item, index) in items}
@@ -70,7 +70,7 @@ e.g.:
       errors: [
         {
           message: `Missing space before 'in' syntax for x-for.
-在 in 关键字语法前缺少空格对于 x-for 指令。
+x-for 指令在 in 关键字语法前缺少空格。
 
 e.g.: 
   x-for={(item, index) in items}
@@ -84,7 +84,7 @@ e.g.:
       errors: [
         {
           message: `Missing space after 'in' syntax for x-for.
-在 in 关键字语法后缺少空格对于 x-for 指令。
+x-for 指令在 in 关键字语法后缺少空格。
 
 e.g.: 
   x-for={(item, index) in items}

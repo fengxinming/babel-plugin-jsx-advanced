@@ -29,9 +29,11 @@ module.exports = {
 
         if (hasProp(node.openingElement.attributes, X_ELIF)) {
           currentAttr = X_ELIF;
-        } else if (hasProp(node.openingElement.attributes, X_ELSE)) {
+        }
+        else if (hasProp(node.openingElement.attributes, X_ELSE)) {
           currentAttr = X_ELSE;
-        } else {
+        }
+        else {
           return;
         }
 
@@ -62,7 +64,7 @@ module.exports = {
             node: attrProp,
             message: `Missing a jsx element which has a '${X_IF}' or '${X_ELIF}' directive as the previous jsx element.
 
-'上一个JSX节点需要包含 '${X_IF}' 或 '${X_ELIF}' 指令。`,
+上一个JSX节点需要包含 '${X_IF}' 或 '${X_ELIF}' 指令。`,
             loc: attrProp.loc
           });
         }

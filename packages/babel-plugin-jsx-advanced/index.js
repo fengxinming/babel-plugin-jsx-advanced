@@ -6,6 +6,7 @@ const parseHtmlDirective = require('./parse/x-html');
 const parseIfDirective = require('./parse/x-if');
 const parseShowDirective = require('./parse/x-show');
 const parseIfTag = require('./parse/if');
+const { compatTypes } = require('./shared/compat6');
 
 const DEFAULT_IF_TAG = 'if';
 const DEFAULT_ELSE_IF_TAG = 'elif';
@@ -78,54 +79,10 @@ function getDirectiveNodes(types, directives, attributes) {
   return directiveNodes;
 }
 
-
-const jsxMethods = [
-  'jsxAttribute',
-  'jSXAttribute',
-
-  'jsxExpressionContainer',
-  'jSXExpressionContainer',
-
-  'jsxIdentifier',
-  'jSXIdentifier'
-];
-
-function compat6(types) {
-  for (let i = 0, len = jsxMethods.length; i < len; i++) {
-    const alias = jsxMethods[i];
-    if (!types[alias]) {
-      types[alias] = types[jsxMethods[++i]];
-    }
-  }
-
-  if (!types.jsxFragment) {
-    types.jsxFragment = function (openingFragment, closingFragment, children) {
-      return types.jSXElement(openingFragment, closingFragment, children);
-    };
-  }
-
-  if (!types.jsxOpeningFragment) {
-    types.jsxOpeningFragment = function () {
-      return types.jSXOpeningElement(
-        types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment')),
-        []
-      );
-    };
-  }
-
-  if (!types.jsxClosingFragment) {
-    types.jsxClosingFragment = function () {
-      return types.jSXClosingElement(
-        types.jSXMemberExpression(types.jSXIdentifier('React'), types.jSXIdentifier('Fragment'))
-      );
-    };
-  }
-}
-
 module.exports = function ({ version, types }, options) {
   // 兼容babel 6
   if (+version[0] < 7) {
-    compat6(types);
+    compatTypes(types);
   }
 
   options = options || {};

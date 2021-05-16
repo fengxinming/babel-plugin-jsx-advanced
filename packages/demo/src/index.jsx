@@ -3,7 +3,7 @@ import React from 'react';
 function ForAttr({ items }) {
   return (
     <ul>
-      <li x-for={(item, index) in items} key={index}>
+      <li x-for={(item, index) in items} key={item.id}>
         {item}
       </li>
       <li x-for={(v, k) in 5} key={k} x-if={k > 3}>{v}</li>
