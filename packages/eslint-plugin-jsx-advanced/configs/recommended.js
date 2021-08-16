@@ -11,6 +11,7 @@ module.exports = {
     'jsx-advanced/valid-x-for': 'error',
     'jsx-advanced/valid-x-if': 'error',
     'jsx-advanced/valid-if': 'error',
-    'jsx-advanced/valid-x-for-key': 'warn'
+    'jsx-advanced/valid-x-for-key': 'warn',
+    'no-sequences': 'off'
   }
 };
