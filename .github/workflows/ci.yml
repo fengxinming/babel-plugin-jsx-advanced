@@ -19,7 +19,7 @@ jobs:
         with:
           version: 10
       - run: npm run deps
-      - run: npm run eslint
       - run: npm run build:all
+      - run: npm run eslint
       - run: npm run test:all
       
