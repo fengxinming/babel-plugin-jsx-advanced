@@ -1,0 +1,4 @@
+import __brja_show_helper__ from "babel-runtime-jsx-advanced-helper/show-helper";
+const render = props => /*#__PURE__*/React.createElement("div", {
+  style: __brja_show_helper__(styles, props.visible)
+}, "hi");

@@ -1,0 +1,69 @@
+import { defineConfig } from 'vite';
+// import vue from '@vitejs/plugin-vue';
+import dts from 'vite-plugin-dts';
+import external from 'vite-plugin-external';
+import { vueSfcPlugin } from 'vue-sfc-transformer/rolldown';
+import { globSync } from 'node:fs';
+import { resolve } from 'node:path';
+import pkg from './package.json' with { type: 'json' };
+
+function resolveEntries(srcEntry: Record<string, string>, entry: string[]): Record<string, string> {
+  const cwd = resolve(import.meta.dirname, 'src');
+  return globSync(entry, { cwd }).reduce((acc, file) => {
+    const name = file.slice(0, file.lastIndexOf('.'));
+    acc[name] = resolve(cwd, file);
+    return acc;
+  }, srcEntry);
+}
+
+/**
+ * babel-plugin-jsx-advanced 的库构建。
+ *
+ * 产物: dist/index.js (ESM) + dist/index.cjs (babel 7 直接 require) + 各入口对应 .d.ts。
+ * workspace 依赖 babel-runtime-jsx-advanced-shared 与运行时 helper 外部化, 由各包独立发布。
+ * .vue 交给 vueSfcPlugin (vitepress 同款 vue-sfc-transformer) 处理: script 剥 TS 产出
+ * 半编译 SFC + X.d.vue.ts 声明 (allowArbitraryExtensions 命名约定), .vue 导入一律
+ * external, SFC 的最终编译由消费端 vite 完成。
+ */
+export default defineConfig({
+  plugins: [
+    vueSfcPlugin({
+      // srcDir 必须是 src 而非 src/components: 插件会把解析到 srcDir 之外的导入
+      // 外部化, 收窄到 components 会把 index.ts 的 style/index.styl 变成悬空外链
+      cwd: import.meta.dirname,
+      srcDir: 'src',
+      tsconfig: './tsconfig.app.json'
+    }),
+    external({
+      externalizeDeps: [
+        ...Object.keys(pkg.dependencies),
+        ...Object.keys(pkg.devDependencies),
+        '@localSearchIndex',
+        /\.vue$/
+      ]
+    }),
+    dts({
+      tsconfigPath: './tsconfig.app.json',
+      // .vue 声明由 vueSfcPlugin 以 X.d.vue.ts 命名发射, 排除避免重复产出 X.vue.d.ts
+      exclude: ['src/components/**/*.vue']
+    })
+  ],
+  build: {
+    minify: false,
+    cssMinify: true,
+    lib: {
+      // object 形式: key 即产物相对路径, 目录结构与 src 一致, raw .vue 的相对导入直接可解析
+      entry: resolveEntries({
+        index: 'src/index.ts',
+        'sections.data': 'src/sections.data.ts',
+        config: 'src/node/config.ts'
+      }, [
+        'composables/**/*.ts',
+        'utils/**/*.ts'
+      ]),
+      formats: ['es', 'cjs'],
+      fileName: '[name]',
+      cssFileName: 'style'
+    }
+  }
+});

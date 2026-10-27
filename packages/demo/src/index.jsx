@@ -105,11 +105,11 @@ function IfTag({ role }) {
   return (
     <>
       <button type="button">查看</button>
-      <if value={role === 'admin'}>
+      <x-if value={role === 'admin'}>
         <button type="button">新增</button>
         <button type="button">编辑</button>
         <button type="button">删除</button>
-      </if>
+      </x-if>
     </>
   );
 }
@@ -117,18 +117,18 @@ function IfTag({ role }) {
 function ElifTag({ type }) {
   return (
     <form>
-      <if value={type === 1}>
+      <x-if value={type === 1}>
         <input placeholder="用户名" />
         <input placeholder="密码" />
-      </if>
-      <elif value={type === 2}>
+      </x-if>
+      <x-elif value={type === 2}>
         <input placeholder="用户名" />
         <input placeholder="验证码" />
         <a href>获取验证码</a>
-      </elif>
-      <elif value={type === 3}>
+      </x-elif>
+      <x-elif value={type === 3}>
         <img src="" alt="扫码登录" />
-      </elif>
+      </x-elif>
     </form>
   );
 }
@@ -136,7 +136,7 @@ function ElifTag({ type }) {
 function ElseTag({ role, items }) {
   return (
     <>
-      <if value={role === 'admin'}>
+      <x-if value={role === 'admin'}>
         <div>
           <input />
           <button type="button">查询</button>
@@ -149,10 +149,10 @@ function ElseTag({ role, items }) {
             </tbody>
           </table>
         </div>
-      </if>
-      <else>
+      </x-if>
+      <x-else>
         无权限访问
-      </else>
+      </x-else>
     </>
   );
 }

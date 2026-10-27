@@ -2,345 +2,94 @@
 
 [![npm package](https://nodei.co/npm/babel-plugin-jsx-advanced.png?downloads=true&downloadRank=true&stars=true)](https://www.npmjs.com/package/babel-plugin-jsx-advanced)
 
-> jsx指令扩展和标签扩展，兼容babel 6.x 和 7.x
+编译期把 `x-for` / `x-if` / `x-show` / `x-class` / `x-html` 与 `<for>` / `<if>` / `<elif>` / `<else>` 转换为 React JSX。需要 Babel 7+。
+
+完整文档：**https://fengxinming.github.io/babel-plugin-jsx-advanced/babel/**
 
 ## 安装
 
 ```bash
-$ npm i --save-dev babel-plugin-jsx-advanced
+npm i -D babel-plugin-jsx-advanced
 ```
-## 修改babel配置
 
-### 常见React项目配置
-
-**babel.config.js**
+## 配置
 
 ```js
 module.exports = {
   plugins: [
-    [
-      'babel-plugin-jsx-advanced', 
-      {
-        // ... 可选配置参数
-      }
-    ]
+    ['babel-plugin-jsx-advanced', {
+      prefix: 'x-',
+      locale: 'zh-CN'
+    }]
   ]
 };
 ```
 
-**config-overrides.js**
+## options
+
+| 字段 | 类型 | 默认值 |
+| --- | --- | --- |
+| `prefix` | `string` | `'x-'` |
+| `locale` | `'zh-CN' \| 'en-US'` | `'zh-CN'` |
+| `attributes` | `Record<kind, boolean \| object>` | 全开 |
+| `tags` | `Record<kind, boolean \| object>` | 全开 |
+| `helpers` | `string \| { module, imported }` | 见下 |
+| `attributes.custom` | `Record<string, CustomDirectiveConfig>` | — |
+| `tags.custom` | `Record<string, CustomDirectiveConfig>` | — |
+
+| kind | 属性默认名 | 标签默认名 | priority |
+| --- | --- | --- | --- |
+| `for` | `x-for` | `for` | 0 |
+| `if` | `x-if` / `x-elif` / `x-else` | `if` / `elif` / `else` | 1 |
+| `show` | `x-show` | — | 2 |
+| `class` | `x-class` | — | 3 |
+| `html` | `x-html` | — | 4 |
+
+`name`、`elif`、`else` 支持 `string | string[]`，按 trim、去重、过滤、回落默认名处理。标签位无 `priority`。
+
+自定义条目：属性位默认名 `prefix + key`，标签位默认名 `key`，默认 priority 为 `100 + 声明顺序`。
 
 ```js
-const {
-  override,
-  addBabelPlugins
-} = require('customize-cra');
-
-module.exports = override(
-  ...addBabelPlugins(
-    [
-      'babel-plugin-jsx-advanced',
-      {
-        // ... 可选配置参数
-      }
-    ]
-  )
-)
-```
-
-**ice.config.js**
-
-```js
-module.exports = {
-  chainWebpack(chainedConfig) {
-    chainedConfig.module
-      .rule('jsx')
-      .use('babel-loader')
-      .tap((options) => {
-        options.plugins.push(
-          [
-            'babel-plugin-jsx-advanced', 
-            {
-              // ... 可选配置参数
-            }
-          ]
-        );
-        return options;
-      });
-  }
-}
-```
-
-### 修改eslint配置
-
-**.eslintrc**
-
-```js
-{
-  "extends": [
-    "plugin:jsx-advanced/recommended"
-  ]
-}
-```
-
-**如果修改了 `prefix` 或 `elifAlias`，需要同步修改eslint配置**
-
-```js
-{
-  "settings": {
-    "jsx-advanced": {
-      "prefix": "v-",
-      "elifAlias": "else-if"
+attributes: {
+  custom: {
+    model: {
+      name: ['x-model', 'x-bind'],
+      priority: 200,
+      transform(node, ctx, state) { /* ... */ }
     }
-  },
-  "extends": [
-    "plugin:jsx-advanced/recommended"
-  ]
-}
-```
-
-### 配置参数详情
-
-* `prefix` - 指令前缀，默认为`'x-'`；
-
-* `elifAlias` - `elif`标签或者指令别名，如：修改为`'else-if'`，默认为`'elif'`；
-
-* `classHelper` - `${prefix}class`指令的辅助函数路径，默认为`'celia.classnames'`；
-
-* `forHelper` - `${prefix}for`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/for-helper'`；
-
-* `showHelper` - `${prefix}show`指令的辅助函数路径，默认为`'babel-plugin-jsx-advanced/show-helper'`；
-
-* `supportIfTag` - 是否支持`<if>/<elif>/<else>`标签，默认开启；
-
-* `supportFor` - 是否支持`${prefix}for`指令，默认开启；
-
-* `supportIf` - 是否支持`${prefix}if`指令，默认开启；
-
-* `supportClass` - 是否支持`${prefix}class`指令，默认开启；
-
-* `supportShow` - 是否支持`${prefix}show`指令，默认开启；
-
-* `supportHtml` - 是否支持`${prefix}html`指令，默认开启；
-
-* `classHelperAlias` - `${prefix}class`指令的辅助函数变量名，默认为`'__class_helper__'`；
-
-* `forHelperAlias` - `${prefix}for`指令的辅助函数变量名，默认为`'__for_helper__'`；
-
-* `showHelperAlias` - `${prefix}show`指令的辅助函数变量名，默认为`'__show_helper__'`。
-
-## 使用
-
-### x-for 指令
-
-**基于源数据多次渲染元素或模板块，在使用该指令之值，必须使用特定语法 alias in expression，为当前遍历的元素提供别名**
-
-```jsx
-function MyComponent({ items }) {
-  return (
-    <ul>
-      <li x-for={(item, index) in items} key={index}>
-        {item}
-      </li>
-    </ul>
-  );
-}
-```
-
-### x-if 指令
-
-**根据表达式的值的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 来有条件地渲染元素**
-
-```jsx
-function MyComponent({ role }) {
-  return (
-    <>
-      <button type="button">新增</button>
-      <button type="button">编辑</button>
-      <button x-if={role === 'admin'} type="button">删除</button>
-    </>
-  );
-}
-```
-
-### x-else 指令
-
-**前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
-
-```jsx
-function MyComponent({ role, items }) {
-  return (
-    <>
-      <table x-if={role === 'admin'}>
-        <thead />
-        <tbody>
-          <tr x-for={(item, index) in items} key={index}>
-            <td>{item}</td>
-          </tr>
-        </tbody>
-      </table>
-      <p x-else>
-        无权限访问
-      </p>
-    </>
-  );
-}
-```
-
-### x-elif 指令
-
-**前一个兄弟元素必须包含 `x-if` 或者 `x-elif`**
-
-```jsx
-function MyComponent({ status }) {
-  return (
-    <>
-      <span x-if={status === 0}>初始化</span>
-      <span x-elif={status === 1}>准备中</span>
-      <span x-elif={status === 2}>发送中</span>
-      <span x-elif={status === 3}>接收中</span>
-      <span x-elif={status === 3}>完成</span>
-      <span x-else>
-        异常&nbsp;&nbsp;
-        <a href>重试</a>
-      </span>
-    </>
-  );
-}
-```
-
-### x-class 指令
-
-**用于条件渲染 `className`，不能跟 `className` 属性共存**
-
-```jsx
-function MyComponent({ status, text }) {
-  return (
-    <>
-      <p
-        x-class={{
-          default: !status,
-          success: status === 1,
-          error: status === 2,
-          warning: status === 3
-        }}
-      >
-        {text}
-      </p>
-      <p
-        x-class={['info', {
-          default: !status,
-          success: status === 1,
-          error: status === 2,
-          warning: status === 3
-        }]}
-      >
-        {text}
-      </p>
-    </>
-  );
-}
-```
-
-### x-show 指令
-
-**根据表达式之真假值，切换元素的 `display` CSS property**
-
-```jsx
-function MyComponent({ isShown }) {
-  return (
-    <p x-show={isShown}>
-      内容1
-    </p>
-  );
-}
-```
-
-### x-html 指令
-
-**更新元素的 `innerHTML`**
-
-```jsx
-function MyComponent({ html }) {
-  if (!html) {
-    html = '<span>hello</span>';
   }
-  return (
-    <p x-html={html} />
-  );
 }
 ```
 
-### if 标签
+helper 默认模块 `babel-runtime-jsx-advanced-helper/{kind}-helper`，默认导入名 `__brja_{kind}_helper__`。
 
-**根据表达式的值的 [truthiness](https://developer.mozilla.org/zh-CN/docs/Glossary/Truthy) 来有条件地渲染元素，并且不会创建额外的真实DOM**
+## 指令速查
+
+| 指令 | 写法 | 结果 |
+| --- | --- | --- |
+| `x-for` | `x-for={(item, i) in items}` | `for` helper 遍历 |
+| `x-if` | `x-if={cond}` | 三目，假值展开 `null` |
+| `x-elif` / `x-else` | 紧跟 `x-if`，中间只允许空白与注释 | 分支链 |
+| `x-show` | `x-show={visible}` | `style` 切换 `display` |
+| `x-class` | `x-class={['a', { b: cond }]}` | 合并进 `className` |
+| `x-html` | `x-html={html}` | `dangerouslySetInnerHTML` |
+| `<for>` | `<for value={(item, i) in items}>` | 同 `x-for`，不产生额外 DOM |
+| `<if>` / `<elif>` / `<else>` | 条件写在 `value` 上 | 同 `x-if` 分支链 |
+
+`x-for` 多变量必须加括号，写成 `(item, i) in items`。
 
 ```jsx
-function MyComponent({ role }) {
-  return (
-    <>
-      <button type="button">查看</button>
-      <if value={role === 'admin'}>
-        <button type="button">新增</button>
-        <button type="button">编辑</button>
-        <button type="button">删除</button>
-      </if>
-    </>
-  );
-}
+<li x-for={(item, i) in items} key={i}>{item}</li>
 ```
-
-### elif 标签
-
-**前一个兄弟元素必须包含 `if` 或者 `elif` 标签**
 
 ```jsx
-function MyComponent({ type }) {
-  return (
-    <form>
-      <if value={type === 1}>
-        <input placeholder="用户名" />
-        <input placeholder="密码" />
-      </if>
-      <elif value={type === 2}>
-        <input placeholder="用户名" />
-        <input placeholder="验证码" />
-        <a href>获取验证码</a>
-      </elif>
-      <elif value={type === 3}>
-        <img src="" alt="扫码登录" />
-      </elif>
-    </form>
-  );
-}
+{__brja_for_helper__(items, (item, i) => <li key={i}>{item}</li>)}
 ```
 
-### else 标签
+## ESLint
 
-**前一个兄弟元素必须包含 `if` 或者 `elif` 标签**
-
-```jsx
-function MyComponent({ role, items }) {
-  return (
-    <>
-      <if value={role === 'admin'}>
-        <div>
-          <input />
-          <button type="button">查询</button>
-          <table>
-            <thead />
-            <tbody>
-              <tr x-for={(item, index) in items} key={index}>
-                <td>{item}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </if>
-      <else>
-        无权限访问
-      </else>
-    </>
-  );
-}
+```bash
+npm i -D eslint-plugin-jsx-advanced
 ```
+
+详见 [eslint-plugin-jsx-advanced](https://www.npmjs.com/package/eslint-plugin-jsx-advanced)。

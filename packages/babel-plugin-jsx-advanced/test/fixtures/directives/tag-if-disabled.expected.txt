@@ -1,0 +1,5 @@
+const render = props => /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("if", {
+  value: props.a
+}, "A"), /*#__PURE__*/React.createElement("elif", {
+  value: props.b
+}, "B"), /*#__PURE__*/React.createElement("else", null, "C"));

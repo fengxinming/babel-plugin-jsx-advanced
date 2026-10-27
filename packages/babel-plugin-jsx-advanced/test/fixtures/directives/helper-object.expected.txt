@@ -1,0 +1,2 @@
+import __mine__ from "my-for-helper";
+const render = props => /*#__PURE__*/React.createElement("ul", null, __mine__(props.items, item => /*#__PURE__*/React.createElement("li", null, item)));

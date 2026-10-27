@@ -1,1 +1,12 @@
+node_modules/
 dist/
+build/
+coverage/
+
+**/dist/
+**/build/
+**/coverage/
+**/node_modules/
+**/test/fixtures/
+
+*.min.js

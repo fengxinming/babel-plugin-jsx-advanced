@@ -4,15 +4,15 @@ function IfTag() {
   const statement = useState(false);
   return (
     <>
-      <if value={statement}>
+      <x-if value={statement}>
         <h2>标题1</h2>
         <p>内容1</p>
-      </if>
+      </x-if>
       {/* else if */}
-      <else-if value={!statement}>
+      <x-else-if value={!statement}>
         <h2>标题2</h2>
         <p>内容2</p>
-      </else-if>
+      </x-else-if>
     </>
   );
 }

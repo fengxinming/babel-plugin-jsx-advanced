@@ -1,0 +1,3 @@
+const render = () => /*#__PURE__*/React.createElement("div", {
+  "data-hit": "hello"
+}, "y");

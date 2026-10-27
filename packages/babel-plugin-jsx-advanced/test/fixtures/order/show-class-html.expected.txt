@@ -1,0 +1,10 @@
+import __brja_class_helper__ from "babel-runtime-jsx-advanced-helper/class-helper";
+const render = props => /*#__PURE__*/React.createElement("div", {
+  style: props.v ? null : {
+    "display": "none"
+  },
+  className: __brja_class_helper__(props.c),
+  dangerouslySetInnerHTML: {
+    "__html": props.h
+  }
+});
