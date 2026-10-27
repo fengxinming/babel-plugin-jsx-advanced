@@ -1,17 +1,48 @@
 {
   "name": "babel-runtime-jsx-advanced-helper",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "A collection of helpers for babel-plugin-jsx-advanced",
-  "main": "index.js",
-  "module": "es/index.js",
   "sideEffects": false,
+  "type": "module",
+  "main": "dist/index.cjs",
+  "module": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.js",
+      "require": "./dist/index.cjs"
+    },
+    "./class-helper": {
+      "types": "./dist/class-helper.d.ts",
+      "import": "./dist/class-helper.js",
+      "require": "./dist/class-helper.cjs"
+    },
+    "./for-helper": {
+      "types": "./dist/for-helper.d.ts",
+      "import": "./dist/for-helper.js",
+      "require": "./dist/for-helper.cjs"
+    },
+    "./show-helper": {
+      "types": "./dist/show-helper.d.ts",
+      "import": "./dist/show-helper.js",
+      "require": "./dist/show-helper.cjs"
+    },
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist"
+  ],
   "scripts": {
-    "build": "rollup -c",
-    "release": "npm run build && npm publish dist"
+    "build": "vite build",
+    "test": "vitest run",
+    "bench": "vitest bench --run",
+    "prepublishOnly": "npm run build",
+    "release": "pnpm publish --no-git-checks"
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/react-hobby/babel-plugins/tree/master/packages/babel-runtime-jsx-advanced-helper"
+    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/master/packages/babel-runtime-jsx-advanced-helper"
   },
   "keywords": [
     "babel",
@@ -21,16 +52,10 @@
   ],
   "author": "Jesse Feng <fxm0016@126.com>",
   "license": "MIT",
-  "dependencies": {
-    "celia": "^8.0.1",
-    "fast-classnames": "^1.0.0"
-  },
   "devDependencies": {
-    "rollup": "^2.26.10",
-    "rollup-plugin-combine": "^2.0.1",
-    "rollup-plugin-copy": "^3.3.0",
-    "rollup-plugin-empty": "^1.0.0",
-    "rollup-plugin-match": "^1.0.0",
-    "rollup-plugin-replace-imports": "^1.0.0"
+    "classnames": "^2.5.1",
+    "vite": "^8.3.1",
+    "vite-plugin-dts": "^5.1.1",
+    "vitest": "^5.0.5"
   }
 }

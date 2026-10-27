@@ -1,0 +1,201 @@
+// ============================================================
+// 设计 token (CSS 变量) — 命名对齐 VitePress 默认主题的 --vp-* 语法
+// 命名规则: --spd- 前缀 + VP 槽位 (c-brand-1 / c-text-N / c-bg-* / c-border
+// / nav-height / font-family-*); VP 没有对应槽位的用语义名
+// 
+// 分段结构 (选择器优先级是刻意设计的, 见下方各段注释):
+// 1) :root                  主题无关 token (圆角 / 尺寸 / 字体 / offset)
+// 2) html:not(.dark)       浅色 token
+// 3) html.dark              深色 token
+// 4) html:not(.dark), html.dark   VP 桥接 (--vp-* 指向 --spd-*, 两边共用)
+// 换肤只动第 2/3 段的 --spd-* 值; 组件里不出现任何裸色值。
+// ============================================================
+
+// ---------- 1. 主题无关 token ----------
+// 圆角 / 尺寸 / 字体与配色无关, 两套主题共用, 放 :root 即可
+:root
+  // ---------- 圆角 ----------
+  --spd-radius-pill 32px
+  --spd-radius-card 12px
+  --spd-radius-lg 20px
+  --spd-radius-md 16px
+  --spd-radius-sm 5px
+  // ---------- 尺寸 (顶栏由默认主题提供, 这里只管左导航与内容偏移) ----------
+  --spd-sidenav-width 240px
+  --spd-heading-offset var(--vp-nav-height, 64px)
+  --spd-doc-max-width 960px
+  --spd-outline-width 220px
+  --spd-layout-max-width 1180px
+  --spd-hero-svg-width 480px
+  --spd-search-panel-width 50vw
+  // 左右固定 aside (SPDSideNav/SPDOutline) 统一取位: top 跟顶栏高度联动;
+  // max-height = 100vh - top - bottom, 底部预留带固定给 CTA 圆形回顶按钮,
+  // 保证按钮永远落在右大纲最大高度下缘之下, 互不重叠
+  --spd-aside-top calc(var(--vp-nav-height, 64px) + 64px)
+  --spd-aside-bottom 120px
+  // ---------- 字体 (VP: font-family-base / font-family-mono) ----------
+  --spd-font-family-base 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Microsoft YaHei', sans-serif
+  --spd-font-family-mono 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, Consolas, monospace
+
+// ---------- 2. 浅色 token ----------
+// 必须用 html:not(.dark) 而不是 :root: VP 自己的 vars.css 里 :root 与 .dark
+// 都是 (0,1,0) 同优先级, 我们若也写 :root 就成了比拼加载顺序的同級竞争,
+// 输了则浅色值不生效(表现为"切到浅色还是深色")。html:not(.dark) 是 (0,1,1),
+// 稳定压过 VP 的 :root/.dark。
+html:not(.dark)
+  // ---------- 背景 ----------
+  --spd-c-bg #ffffff
+  --spd-c-bg-alt #f6f8f9
+  --spd-c-bg-soft #eef2f4
+  --spd-c-bg-elv #ffffff
+  --spd-c-bg-playground #f2f6f8
+  --spd-c-bg-hover #e2ebf0
+  // ---------- 边框 ----------
+  --spd-c-border #d8e0e6
+  --spd-c-border-playground #cfd9e0
+  // ---------- 品牌色 (青 700 档: 浅底上做文字/图标才有足够对比度;
+  // 深色档的 #00d9ff 在白底上几乎不可读, 故浅色不能沿用) ----------
+  --spd-c-brand-1 #0e7490
+  --spd-c-brand-2 #0a5f6e
+  --spd-c-brand-3 #155e75
+  // 品牌色弱化底 (chips / 行内代码 / 徽标等); 必须是半透明 alpha,
+  // 这样多层叠加时能叠出更深的色 (VP Palette 段对 soft 色的约定)
+  --spd-c-brand-soft rgba(14, 116, 144, 0.14)
+  // 顶栏底色: 半透明 + blur 组成磨砂, 浅色用半透明白
+  --spd-nav-bg rgba(255, 255, 255, 0.7)
+  // ---------- 文本 (VP: c-text-N, 按亮度从高到低编号) ----------
+  --spd-c-text-1 #0b1f2a
+  --spd-c-text-2 #16293a
+  --spd-c-text-3 #24404f
+  --spd-c-text-4 #3d5563
+  --spd-c-text-5 #5b7280
+  --spd-c-text-6 #718899
+  --spd-c-text-7 #93a5b1
+  // ---------- 阴影 / 透明色 (固化完整 rgba, 覆写时需带 alpha) ----------
+  --spd-shadow-glow rgba(14, 116, 144, 0.25)
+  --spd-shadow-glow-strong rgba(14, 116, 144, 0.4)
+  --spd-shadow-modal rgba(15, 30, 45, 0.35)
+  --spd-overlay-strong rgba(15, 30, 45, 0.5)
+  --spd-chip-bg rgba(14, 116, 144, 0.08)
+  --spd-chip-bg-active rgba(14, 116, 144, 0.16)
+  --spd-orb-cyan rgba(14, 116, 144, 0.18)
+  --spd-orb-teal rgba(10, 95, 110, 0.14)
+  --spd-btn-bg rgba(15, 30, 45, 0.05)
+  --spd-btn-bg-hover rgba(15, 30, 45, 0.1)
+  --spd-kbd-bg rgba(15, 30, 45, 0.06)
+  --spd-err-bg rgba(220, 38, 38, 0.08)
+  --spd-mark-bg rgba(14, 116, 144, 0.2)
+  // 品牌实底上的前景色 (CTA 按钮等): 浅色下品牌色本身够深, 前景用白
+  --spd-on-brand #ffffff
+
+// ---------- 3. 深色 token ----------
+// 沿用原 navy 主题。html.dark 是 (0,1,1), 压过 VP 的 .dark (0,1,0),
+// 避免与 VP vars.css 比拼加载顺序
+html.dark
+  // ---------- 背景 ----------
+  --spd-c-bg #0a192f
+  --spd-c-bg-alt #112240
+  --spd-c-bg-soft #1a2332
+  --spd-c-bg-elv #15202b
+  --spd-c-bg-playground #1e2a38
+  --spd-c-bg-hover #1e3a5f
+  // ---------- 边框 ----------
+  --spd-c-border #233554
+  --spd-c-border-playground #2c3e50
+  // ---------- 品牌色 ----------
+  --spd-c-brand-1 #00d9ff
+  --spd-c-brand-2 #64ffda
+  --spd-c-brand-3 #7c5cff
+  // 品牌色弱化底 (chips / 行内代码 / 徽标等); 必须是半透明 alpha,
+  // 这样多层叠加时能叠出更深的色 (VP Palette 段对 soft 色的约定)
+  --spd-c-brand-soft rgba(0, 217, 255, 0.14)
+  // 顶栏底色: 磨砂 navy, 与站点主题色同族 (VP 默认深色是中性黑, 与主题脱节)
+  --spd-nav-bg rgba(10, 25, 47, 0.7)
+  // ---------- 文本 ----------
+  --spd-c-text-1 #e6f1ff
+  --spd-c-text-2 #dce4ed
+  --spd-c-text-3 #ccd6f6
+  --spd-c-text-4 #c9d3e8
+  --spd-c-text-5 #94a3b8
+  --spd-c-text-6 #8892b0
+  --spd-c-text-7 #5a6f8e
+  // ---------- 阴影 / 透明色 ----------
+  --spd-shadow-glow rgba(0, 217, 255, 0.35)
+  --spd-shadow-glow-strong rgba(0, 217, 255, 0.5)
+  --spd-shadow-modal rgba(0, 0, 0, 0.55)
+  --spd-overlay-strong rgba(10, 25, 47, 0.7)
+  --spd-chip-bg rgba(0, 217, 255, 0.08)
+  --spd-chip-bg-active rgba(0, 217, 255, 0.18)
+  --spd-orb-cyan rgba(0, 217, 255, 0.28)
+  --spd-orb-teal rgba(100, 255, 218, 0.18)
+  --spd-btn-bg rgba(17, 34, 64, 0.6)
+  --spd-btn-bg-hover rgba(17, 34, 64, 0.9)
+  --spd-kbd-bg rgba(10, 25, 47, 0.5)
+  --spd-err-bg rgba(255, 99, 99, 0.12)
+  --spd-mark-bg rgba(0, 217, 255, 0.32)
+  // 品牌实底上的前景色: 深色下品牌色是亮青, 前景必须用深底色才看得清
+  --spd-on-brand #0a192f
+
+// ---------- 4. VP 桥接 (两套主题共用) ----------
+// VPHome hero / VPButton / custom blocks 等默认主题组件全部消费 --vp-* 变量,
+// 这里把它们整桥接到 spd token。因为桥接内容全是 var(--spd-*) 的指向,
+// 值随第 2/3 段的 token 自动翻转, 所以只需写一份 (选择器 (0,1,1),
+// 同样压过 VP 的 :root/.dark)。主题换肤只动 --spd-* 即可全站生效。
+html:not(.dark), html.dark
+  // ---------- 顶栏 ----------
+  // 深色是磨砂 navy; 浅色用半透明白 + 同样 blur 保持质感一致
+  --vp-nav-bg-color var(--spd-nav-bg, var(--vp-c-bg))
+  --vp-nav-backdrop-filter blur(15px)
+  // ---------- 背景 ----------
+  --vp-c-bg var(--spd-c-bg)
+  --vp-c-bg-alt var(--spd-c-bg-alt)
+  --vp-c-bg-soft var(--spd-c-bg-soft)
+  --vp-c-bg-elv var(--spd-c-bg-elv)
+  // ---------- 文本 (VP 三级 ← spd 七级: 正文亮 / 次要 / 最弱) ----------
+  --vp-c-text-1 var(--spd-c-text-1)
+  --vp-c-text-2 var(--spd-c-text-5)
+  --vp-c-text-3 var(--spd-c-text-7)
+  // ---------- 边框 / 分隔线 ----------
+  --vp-c-border var(--spd-c-border)
+  --vp-c-divider var(--spd-c-border)
+  --vp-c-gutter var(--spd-c-border)
+  // ---------- 品牌 ----------
+  --vp-c-brand-1 var(--spd-c-brand-1)
+  --vp-c-brand-2 var(--spd-c-brand-2)
+  --vp-c-brand-3 var(--spd-c-brand-3)
+  --vp-c-brand-soft var(--spd-c-brand-soft)
+  // ---------- 按钮 (VP 默认 brand bg 用 brand-3 紫色, 与主题 solid=brand-1 不符, 显式对齐;
+  // alt 按钮即"快速开始"那颗线框胶囊) ----------
+  --vp-button-brand-bg var(--spd-c-brand-1)
+  --vp-button-brand-hover-bg var(--spd-c-brand-2)
+  --vp-button-brand-active-bg var(--spd-c-brand-1)
+  --vp-button-brand-text var(--spd-on-brand)
+  --vp-button-brand-hover-text var(--spd-on-brand)
+  --vp-button-brand-active-text var(--spd-on-brand)
+  --vp-button-alt-bg var(--spd-btn-bg)
+  --vp-button-alt-hover-bg var(--spd-btn-bg-hover)
+  --vp-button-alt-active-bg var(--spd-btn-bg-hover)
+  --vp-button-alt-text var(--spd-c-text-2)
+  --vp-button-alt-hover-text var(--spd-c-brand-1)
+  --vp-button-alt-active-text var(--spd-c-brand-1)
+  --vp-button-alt-border var(--spd-c-text-2)
+  --vp-button-alt-hover-border var(--spd-c-brand-1)
+  // ---------- hero (VPHome) ----------
+  // 名称渐变走 VP 的 .clip 机制: name-background 填充 + name-color 透明;
+  // image 槽 (frontmatter.hero.image 或 home-hero-image 插槽) 配了之后 VPHero
+  // 才加 .has-image 类并渲染 .image-container 内的 12rem 圆形光斑
+  --vp-home-hero-name-color transparent
+  --vp-home-hero-name-background linear-gradient(120deg, var(--spd-c-brand-1), var(--spd-c-brand-2))
+  --vp-home-hero-image-background-image linear-gradient(-45deg, var(--spd-orb-cyan) 50%, var(--spd-orb-teal) 50%)
+  --vp-home-hero-image-filter blur(72px)
+
+// ---------- hero 图像投影 (VPHero .image-src) ----------
+// 3D 感来自 logo.svg 自身画出的斜切层叠 (源码在 public/logo.svg, 光源左上/深色面右下),
+// 这里只补一层 drop-shadow 把图形从光斑里"抬"起来, 对齐官网 .VPHero .VPImage 的做法。
+// 用 --spd-shadow-modal 而不是官网写死的 rgba(0,0,0,.2): 前者按主题翻转
+// (浅色 rgba(15,30,45,.35) / 深色 rgba(0,0,0,.55)), 浅色底上才压得住。
+// 只写 filter, 不动 transform —— VPHero 定位靠 :deep(.image-src) 的
+// translate(-50%,-50%), 覆盖它会让图片偏离圆形光斑中心。
+.VPHero .VPImage
+  filter drop-shadow(-2px 4px 6px var(--spd-shadow-modal))
+  padding 1.125rem

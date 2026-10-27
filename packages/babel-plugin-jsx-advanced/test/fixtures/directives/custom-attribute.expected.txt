@@ -1,0 +1,4 @@
+const render = props => /*#__PURE__*/React.createElement("div", {
+  className: "box",
+  onClick: props.onTrack
+}, "x");

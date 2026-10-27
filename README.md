@@ -1,6 +1,6 @@
 # babel-plugin-jsx-advanced
 
-> jsx指令扩展和标签扩展，兼容babel 6.x 和 7.x
+> jsx指令扩展和标签扩展，兼容babel 7.x 和 8.x
 
 | Package | Version | Docs | Description |
 | ------- | ------- | ---- | ----------- |

@@ -1,0 +1,23 @@
+{
+  "extends": "./tsconfig.base.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "types": [
+      "./packages/babel-plugin-jsx-advanced/node_modules/vite/client.d.ts",
+      "./packages/spd-vitepress-components/node_modules/vitepress/client.d.ts"
+    ]
+  },
+  "include": [
+    "./packages/**/*.ts",
+    "./packages/**/*.mts",
+    "./packages/**/*.vue",
+    "packages/docs/.vitepress/**/*.ts", 
+    "packages/docs/.vitepress/**/*.mts", 
+    "packages/docs/.vitepress/**/*.vue"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules"
+  ]
+}

@@ -1,0 +1,1 @@
+const render = props => /*#__PURE__*/React.createElement("div", null, props.a ? /*#__PURE__*/React.createElement(React.Fragment, null, "A") : props.b ? /*#__PURE__*/React.createElement(React.Fragment, null, "B") : /*#__PURE__*/React.createElement(React.Fragment, null, "C"));

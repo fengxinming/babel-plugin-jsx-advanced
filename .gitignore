@@ -89,7 +89,9 @@ dist
 # public
 
 # vuepress build output
-.vuepress/dist
+.vuepress/dist/
+packages/docs/.vitepress/dist/
+packages/docs/.vitepress/cache/
 
 # Serverless directories
 .serverless/
@@ -104,3 +106,6 @@ dist
 .tern-port
 
 pnpm-lock.yaml
+.workbuddy/
+.DS_Store
+.npmrc

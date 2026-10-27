@@ -1,7 +1,57 @@
 {
   "extends": [
-    "fe",
-    "fe/react",
-    "plugin:jsx-advanced/recommended"
+    "fe", 
+    "fe/ts", 
+    "fe/react", 
+    "plugin:vue/recommended",
+    "plugin:jsx-advanced/legacy_all"
+  ],
+  "settings": {
+    "jsx-advanced": {
+      "attribute": {
+        "elif": ["x-elif", "x-else-if"]
+      },
+      "tag": {
+        "elif": ["elif", "else-if"]
+      }
+    }
+  },
+  "rules": {
+    "react/no-unknown-property": [
+      "error",
+      {
+        "ignore": [
+          "x-for",
+          "x-if",
+          "x-elif",
+          "x-else",
+          "x-else-if",
+          "x-show",
+          "x-class",
+          "x-html"
+        ]
+      }
+    ]
+  },
+  "overrides": [
+    {
+      "files": [
+        "./packages/**/*.ts",
+        "./packages/**/*.mts",
+        "./packages/**/*.vue",
+        "./packages/doc/docs/.vitepress/**/*.ts", 
+        "./packages/doc/docs/.vitepress/**/*.mts", 
+        "./packages/doc/docs/.vitepress/**/*.vue"
+      ],
+      "parser": "vue-eslint-parser",
+      "parserOptions": {
+        "parser": "@typescript-eslint/parser",
+        "extraFileExtensions": [".vue"],
+        "project": "./tsconfig.json"
+      },
+      "rules": {
+        "vue/no-v-html": "off"
+      }
+    }
   ]
 }

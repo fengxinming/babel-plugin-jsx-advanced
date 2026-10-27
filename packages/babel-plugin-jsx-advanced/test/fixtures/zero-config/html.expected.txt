@@ -1,0 +1,6 @@
+const render = props => /*#__PURE__*/React.createElement("div", {
+  className: "box",
+  dangerouslySetInnerHTML: {
+    "__html": props.html
+  }
+});

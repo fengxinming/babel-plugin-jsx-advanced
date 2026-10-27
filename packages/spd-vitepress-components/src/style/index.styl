@@ -1,0 +1,32 @@
+@require './_tokens'
+
+// ============================================================
+// 全局基线: 只保留与组件无关、且不能收进组件作用域的行为。
+// 注意: 默认主题 (VPLayout/VPNav/VPDoc) 与本包并存, 这里绝不能出现
+// `*` reset / body 底色 / a 链接色这类全局规则, 否则会打坏 VP 布局;
+// 主题底色统一走 _tokens.styl 里的 --vp-* 变量覆写。
+// ============================================================
+
+// 点锚点时的平滑滚动: VP router 的 scrollIntoView 与 useHashRoute 的
+// scrollTo 都会跟随该属性 (behavior: 'auto' 时读CSS, 'smooth' 时显式动画)
+html
+  scroll-behavior smooth
+
+// 刷新/直链带 #hash 进入时, 浏览器原生 fragment 导航会聚焦 tabindex="-1" 的标题,
+// Chrome 判为 :focus-visible 画出 UA 描边; 非交互标题无 keyboard 焦点意义, 压掉
+[tabindex='-1']:focus
+  outline none
+
+::selection
+  background rgba(0, 217, 255, 0.3)
+
+::-webkit-scrollbar
+  width 8px
+  height 8px
+
+::-webkit-scrollbar-thumb
+  background var(--spd-c-border)
+  border-radius var(--spd-radius-sm)
+
+::-webkit-scrollbar-thumb:hover
+  background var(--spd-c-brand-1)

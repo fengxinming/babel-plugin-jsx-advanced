@@ -1,0 +1,4 @@
+const render = props => /*#__PURE__*/React.createElement("div", {
+  "x-if": props.a,
+  "x-show": props.v
+}, "hi");

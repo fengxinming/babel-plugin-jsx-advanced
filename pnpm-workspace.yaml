@@ -1,2 +1,8 @@
+lockfile: false
+shamefullyHoist: false
 packages:
   - 'packages/*'
+allowBuilds:
+  esbuild: true
+minimumReleaseAgeExclude:
+  - eslint-config-fe@3.0.0

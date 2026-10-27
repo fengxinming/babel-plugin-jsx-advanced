@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 72 72" fill="none" role="img" aria-label="jsx-advanced">
+  <!-- 透明底: hero 的 .image-bg 圆形光斑(VP 原生机制)靠 SVG 无背景矩形才能透出来。
+       斜切层叠(而非 CSS rotate): 3D 厚度画在图形自身, 光源在左上, 深色面落右下,
+       对齐官网 art/vitepress-logo.svg 的做法; 投影由 CSS 侧 .VPHero .VPImage 补。
+       viewBox 72: 层叠向右下扩 4px, 留白不被吃掉, object-fit contain 下视觉大小不变。 -->
+  <defs>
+    <!-- 正面渐变: 对齐深色主题 brand-1/2/3 (青 → teal → 紫) -->
+    <linearGradient id="g" x1="20" y1="20" x2="52" y2="52" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#00d9ff"/>
+      <stop offset=".5" stop-color="#64ffda"/>
+      <stop offset="1" stop-color="#7c5cff"/>
+    </linearGradient>
+    <!-- 背面柔光: 与 hero 光斑呼应; 浅色底上几乎不可见, 不会突兀 -->
+    <radialGradient id="halo" cx=".5" cy=".5" r=".5">
+      <stop stop-color="#00d9ff" stop-opacity=".4"/>
+      <stop offset="1" stop-color="#00d9ff" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+  <circle cx="36" cy="36" r="32" fill="url(#halo)"/>
+  <!-- 背面 (最暗, 偏移 4px): X 两笔 (= JSX 的 X), 圆头端点 -->
+  <g stroke="#0a2540" stroke-width="9" stroke-linecap="round">
+    <path d="M24 24 56 56"/>
+    <path d="M56 24 24 56"/>
+  </g>
+  <!-- 中间层 (偏移 2px): 拉开层距, 侧面才看得出厚度 -->
+  <g stroke="#12506f" stroke-width="9" stroke-linecap="round">
+    <path d="M22 22 54 54"/>
+    <path d="M54 22 22 54"/>
+  </g>
+  <!-- 正面 (品牌渐变) -->
+  <g stroke="url(#g)" stroke-width="9" stroke-linecap="round">
+    <path d="M20 20 52 52"/>
+    <path d="M52 20 20 52"/>
+  </g>
+  <!-- 交叉中心的菱形节点: 呼应指令节点; 压在两笔之上, 顺带遮住交叉处的层叠穿帮。
+       填品牌紫 brand-3 而不是纯白: 纯白在浅色底上会糊成一个点, 且与青紫渐变不同族。 -->
+  <rect x="30.5" y="30.5" width="11" height="11" rx="2" transform="rotate(45 36 36)" fill="#7c5cff" stroke="#c9b8ff" stroke-width="2.5"/>
+</svg>

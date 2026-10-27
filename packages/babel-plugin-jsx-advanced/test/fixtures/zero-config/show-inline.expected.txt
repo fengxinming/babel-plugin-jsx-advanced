@@ -1,0 +1,7 @@
+const render = props => /*#__PURE__*/React.createElement("div", {
+  className: "box"
+}, /*#__PURE__*/React.createElement("span", null, "stay"), /*#__PURE__*/React.createElement("b", {
+  style: props.visible ? null : {
+    "display": "none"
+  }
+}, "hi"));

@@ -1,0 +1,6 @@
+import __brja_for_helper__ from "babel-runtime-jsx-advanced-helper/for-helper";
+const render = props => /*#__PURE__*/React.createElement("ul", {
+  className: "list"
+}, __brja_for_helper__(props.items, (item, i) => /*#__PURE__*/React.createElement("li", {
+  key: i
+}, item)));

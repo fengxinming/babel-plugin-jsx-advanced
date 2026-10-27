@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none" role="img" aria-label="jsx-advanced">
+  <!-- favicon 专用: 16-32px 下渐变+柔光会糊成一片, 只保留实色 X 骨架, 保证小尺寸辨识度 -->
+  <path d="M15 15 49 49" stroke="#00d9ff" stroke-width="11" stroke-linecap="round"/>
+  <path d="M49 15 15 49" stroke="#00d9ff" stroke-width="11" stroke-linecap="round"/>
+</svg>
