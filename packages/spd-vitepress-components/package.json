@@ -22,7 +22,6 @@
   "scripts": {
     "dev": "vite",
     "build": "vue-tsc -b && tsdown",
-    "prepublishOnly": "npm run build",
     "release": "pnpm publish --no-git-checks"
   },
   "repository": {
