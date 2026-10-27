@@ -4,7 +4,7 @@ import { fileURLToPath } from 'node:url';
 import { transformSync } from '@babel/core';
 import presetReact from '@babel/preset-react';
 import { expect } from 'vitest';
-import plugin from '../dist/index.js';
+import plugin from '../src/index';
 import type { PluginOptions } from '../src/types';
 
 const FIXTURES_DIR = path.join(path.dirname(fileURLToPath(import.meta.url)), 'fixtures');
