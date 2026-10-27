@@ -20,7 +20,6 @@
   "scripts": {
     "build": "vite build",
     "test": "vitest run",
-    "prepublishOnly": "npm run build",
     "release": "pnpm publish --no-git-checks"
   },
   "repository": {
