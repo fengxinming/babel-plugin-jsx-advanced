@@ -37,7 +37,6 @@
     "build": "vite build",
     "test": "vitest run",
     "bench": "vitest bench --run",
-    "prepublishOnly": "npm run build",
     "release": "pnpm publish --no-git-checks"
   },
   "repository": {
