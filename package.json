@@ -11,7 +11,7 @@
     "docs:preview": "pnpm run --filter=docs docs:preview",
     "build:all": "pnpm run -r build",
     "test:all": "pnpm run -r test",
-    "release:all": "publish-pkgs packages/babel-plugin-jsx-advanced packages/babel-runtime-jsx-advanced-helper packages/eslint-plugin-jsx-advanced packages/spd-vitepress-components",
+    "release:all": "publish-pkgs packages/{babel-plugin-jsx-advanced,babel-runtime-jsx-advanced-helper,eslint-plugin-jsx-advanced,spd-vitepress-components}",
     "eslint": "eslint --ext .js,.jsx,.ts,.tsx,.mjs --ignore-path .eslintignore ./",
     "eslint:fix": "eslint --ext .js,.jsx,.ts,.tsx,.mjs --fix --ignore-path .eslintignore ./"
   },
