@@ -1,0 +1,9 @@
+{
+  "packages": "packages/{babel-plugin-jsx-advanced,babel-runtime-jsx-advanced-helper,eslint-plugin-jsx-advanced,spd-vitepress-components}",
+  "client": "pnpm",
+  "args": [
+    "stage",
+    "publish",
+    "--no-git-checks"
+  ]
+}
