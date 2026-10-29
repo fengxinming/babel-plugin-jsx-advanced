@@ -107,5 +107,6 @@ packages/docs/.vitepress/cache/
 
 pnpm-lock.yaml
 .workbuddy/
+.trae/
 .DS_Store
 .npmrc

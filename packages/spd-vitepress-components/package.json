@@ -1,7 +1,7 @@
 {
   "name": "spd-vitepress-components",
   "description": "Vitepress theme for single page documentation.",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "type": "module",
   "main": "dist/index.js",
   "module": "dist/index.js",
@@ -27,8 +27,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/master/packages/spd-vitepress-theme"
+    "url": "git+https://github.com/fengxinming/babel-plugin-jsx-advanced.git",
+    "directory": "packages/spd-vitepress-components"
   },
+  "bugs": {
+    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/issues"
+  },
+  "homepage": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/main/packages/spd-vitepress-components#readme",
   "keywords": [
     "theme",
     "vitepress-theme",

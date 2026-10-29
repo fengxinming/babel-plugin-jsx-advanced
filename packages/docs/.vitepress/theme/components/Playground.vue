@@ -55,7 +55,7 @@ const INITIAL_CODE = `const Demo = ({ list, groups, visible, isActive, disabled,
 );
 `;
 
-type EntryKind = 'for' | 'if' | 'show' | 'class' | 'html';
+type EntryKind = 'for' | 'if' | 'elif' | 'else' | 'show' | 'class' | 'html';
 
 /** 面板里的一行: 一个内置指令 + 属性位 / 标签位 */
 interface EntryForm {
@@ -65,22 +65,23 @@ interface EntryForm {
   enabled: boolean;
   /** 逗号或空格分隔; 留空 = 用默认名 */
   names: string;
-  /** 仅 if 使用 */
-  elif: string;
-  else: string;
   /** 仅属性位使用; 留空 = 用内置默认序 */
   priority: string;
 }
 
-/** 内置清单: 属性位 5 个 + 标签位 2 个, 与文档的顺序一致 */
+/** 内置清单: 属性位 7 个 + 标签位 4 个, 与文档的顺序一致 */
 const rows = reactive<EntryForm[]>([
-  { key: 'attribute-for', position: 'attribute', kind: 'for', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'attribute-if', position: 'attribute', kind: 'if', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'attribute-show', position: 'attribute', kind: 'show', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'attribute-class', position: 'attribute', kind: 'class', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'attribute-html', position: 'attribute', kind: 'html', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'tag-for', position: 'tag', kind: 'for', enabled: true, names: '', elif: '', else: '', priority: '' },
-  { key: 'tag-if', position: 'tag', kind: 'if', enabled: true, names: '', elif: '', else: '', priority: '' }
+  { key: 'attribute-for', position: 'attribute', kind: 'for', enabled: true, names: '', priority: '' },
+  { key: 'attribute-if', position: 'attribute', kind: 'if', enabled: true, names: '', priority: '' },
+  { key: 'attribute-elif', position: 'attribute', kind: 'elif', enabled: true, names: '', priority: '' },
+  { key: 'attribute-else', position: 'attribute', kind: 'else', enabled: true, names: '', priority: '' },
+  { key: 'attribute-show', position: 'attribute', kind: 'show', enabled: true, names: '', priority: '' },
+  { key: 'attribute-class', position: 'attribute', kind: 'class', enabled: true, names: '', priority: '' },
+  { key: 'attribute-html', position: 'attribute', kind: 'html', enabled: true, names: '', priority: '' },
+  { key: 'tag-for', position: 'tag', kind: 'for', enabled: true, names: '', priority: '' },
+  { key: 'tag-if', position: 'tag', kind: 'if', enabled: true, names: '', priority: '' },
+  { key: 'tag-elif', position: 'tag', kind: 'elif', enabled: true, names: '', priority: '' },
+  { key: 'tag-else', position: 'tag', kind: 'else', enabled: true, names: '', priority: '' }
 ]);
 
 const prefix = ref('x-');
@@ -96,15 +97,21 @@ function defaultMain(row: EntryForm, prefixValue = prefix.value): string {
   return row.position === 'tag' ? row.kind : `${prefixValue}${row.kind}`;
 }
 
-/** if 分支的默认名: 同样按属性位 / 标签位区分 */
-function defaultBranch(row: EntryForm, branch: 'elif' | 'else', prefixValue = prefix.value): string {
-  return row.position === 'tag' ? branch : `${prefixValue}${branch}`;
+/** if 分支 (elif / else): 名字独立, 启用状态跟随同位置的 if 行 */
+function isBranch(row: EntryForm): boolean {
+  return row.kind === 'elif' || row.kind === 'else';
+}
+
+/** 取同位置、同 kind 的面板行 (elif / else 跟着 if 走) */
+function findRow(position: EntryForm['position'], kind: EntryKind): EntryForm | undefined {
+  return rows.find((row) => row.position === position && row.kind === kind);
 }
 
 /** 内置默认优先级: 数值越小越先执行, 标签位与属性位同表 */
 function defaultPriority(row: EntryForm): string {
-  const priorities: Record<EntryKind, number> = { for: 0, if: 1, show: 2, class: 3, html: 4 };
-  return String(priorities[row.kind]);
+  const priorities: Partial<Record<EntryKind, number>> = { for: 0, if: 1, show: 2, class: 3, html: 4 };
+  const priority = priorities[row.kind];
+  return priority === undefined ? '' : String(priority);
 }
 
 /** 面板一行 → 标签位条目: 只认 name */
@@ -135,8 +142,8 @@ function buildIfEntry(row: EntryForm): false | { name?: string[]; priority?: num
     const priority = Number(row.priority);
     if (Number.isFinite(priority)) entry.priority = priority;
   }
-  const elif = parseNames(row.elif);
-  const elseNames = parseNames(row.else);
+  const elif = parseNames(findRow(row.position, 'elif')?.names ?? '');
+  const elseNames = parseNames(findRow(row.position, 'else')?.names ?? '');
   if (elif.length) entry.elif = elif;
   if (elseNames.length) entry.else = elseNames;
   return entry;
@@ -147,6 +154,8 @@ function buildOptions(): PluginOptions {
   const tags: NonNullable<PluginOptions['tags']> = {};
   const attributes: NonNullable<PluginOptions['attributes']> = {};
   for (const row of rows) {
+    // elif / else 是 if 的分支, 名字并进 if 条目, 不单独出条目
+    if (isBranch(row)) continue;
     if (row.position === 'tag') {
       if (row.kind === 'for') tags.for = buildTagEntry(row);
       else if (row.kind === 'if') tags.if = buildIfEntry(row);
@@ -297,29 +306,22 @@ onBeforeUnmount(() => {
               <th>启用</th>
               <th>指令</th>
               <th>名字（逗号分隔）</th>
-              <th>elif</th>
-              <th>else</th>
               <th>priority</th>
             </tr>
           </thead>
           <tbody>
             <tr v-for="row in rows" :key="row.key">
-              <td><input v-model="row.enabled" type="checkbox"></td>
+              <td>
+                <!-- elif / else 没有独立开关, 勾选状态跟随所属 if -->
+                <input v-if="!isBranch(row)" v-model="row.enabled" type="checkbox">
+              </td>
               <td class="directive-cell">{{ rowLabel(row) }}</td>
               <td>
                 <input v-model="row.names" class="field-input" :placeholder="defaultMain(row)">
               </td>
               <td>
-                <input v-model="row.elif" class="field-input" :disabled="row.kind !== 'if'"
-                  :placeholder="row.kind === 'if' ? defaultBranch(row, 'elif') : ''">
-              </td>
-              <td>
-                <input v-model="row.else" class="field-input" :disabled="row.kind !== 'if'"
-                  :placeholder="row.kind === 'if' ? defaultBranch(row, 'else') : ''">
-              </td>
-              <td>
                 <input v-model="row.priority" class="field-input priority-input"
-                  :disabled="row.position !== 'attribute'" :placeholder="defaultPriority(row)">
+                  :disabled="row.position !== 'attribute' || isBranch(row)" :placeholder="defaultPriority(row)">
               </td>
             </tr>
           </tbody>

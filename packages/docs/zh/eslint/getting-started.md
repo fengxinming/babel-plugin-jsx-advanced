@@ -2,9 +2,9 @@
 title: 快速开始
 ---
 
-# 快速开始
+# 快速开始 {#getting-started}
 
-## 安装
+## 安装 {#install}
 
 ```bash
 pnpm add -D eslint eslint-plugin-jsx-advanced
@@ -12,7 +12,7 @@ pnpm add -D eslint eslint-plugin-jsx-advanced
 
 ESLint 版本要求 `^8.57.0 || ^9.0.0 || ^10.0.0`。
 
-## Flat config
+## Flat config {#flat-config}
 
 ```js
 // eslint.config.js
@@ -48,7 +48,7 @@ export default [jsxAdvanced.configs.all];
 
 当前 `recommended` 与 `all` 的规则集相同（5 条，`valid-attribute-x-for-key` 为 `warn`），两个入口都保留。
 
-## eslintrc
+## eslintrc {#eslintrc}
 
 ```json
 {
@@ -58,7 +58,7 @@ export default [jsxAdvanced.configs.all];
 
 或 `plugin:jsx-advanced/all`。eslintrc 形状的预设只有 `parserOptions.ecmaFeatures.jsx`、`plugins` 与 `rules`，不接管你的 parser 配置。
 
-## 与 Babel 插件的配置对齐
+## 与 Babel 插件的配置对齐 {#aligning-with-the-babel-plugin}
 
 ESLint 插件没有 `prefix` 选项，规则只认 settings 里写死（或用默认名）的指令名。Babel 侧若改了 `prefix` 或改过指令名，需要在这里逐项写明，否则规则找不到节点、静默零报错。
 
@@ -77,4 +77,4 @@ export default [
 ];
 ```
 
-详见[配置](/eslint/settings)。
+详见[配置](#settings)。

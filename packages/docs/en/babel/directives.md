@@ -48,7 +48,7 @@ Built-in attribute defaults are built from `prefix + kind` (`x-for`, `x-if`, `x-
 
 **Where it applies**: in a JSX child position, the replacement result is automatically wrapped in a `{…}` expression container; in expression positions such as `return` or variable initialization it replaces directly without a container.
 
-## for — list rendering
+## for — list rendering {#for-list-rendering}
 
 **Attribute form**
 
@@ -110,7 +110,7 @@ Tag form always reads the `value` attribute, no other name.
 | Tag form missing the `value` attribute or its binding expression | `TAG_VALUE_REQUIRED` |
 | Binding is not in `… in …` form | `FOR_EXPRESSION_INVALID` |
 
-## if — conditional rendering
+## if — conditional rendering {#if-conditional-rendering}
 
 **Attribute form**
 
@@ -169,7 +169,7 @@ Compiles to:
 | Orphaned `elif` | `BRANCH_ELIF_TAG_REQUIRES_PRECEDING` / `BRANCH_ELIF_ATTRIBUTE_REQUIRES_PRECEDING` |
 | Orphaned `else` | `BRANCH_ELSE_TAG_REQUIRES_PRECEDING` / `BRANCH_ELSE_ATTRIBUTE_REQUIRES_PRECEDING` |
 
-## show — toggle visibility
+## show — toggle visibility {#show-toggle-visibility}
 
 ```jsx
 <div x-show={visible}>Content</div>
@@ -187,7 +187,7 @@ The output depends on whether the element already has `style`:
 
 The value must be a binding expression (`DIRECTIVE_VALUE_REQUIRED`); the string form is not accepted. Without `style`, the ternary switches directly — `null` when shown, `{ display: 'none' }` when hidden; with an existing bound `style`, the helper shallow-copies it and writes `display`, so other declarations are preserved.
 
-## class — class merging
+## class — class merging {#class-merging}
 
 ```jsx
 <div x-class={{ active: visible }}>Content</div>
@@ -204,7 +204,7 @@ The value must be a binding expression (`DIRECTIVE_VALUE_REQUIRED`); the string 
 
 The helper concatenates arguments in order, existing `className` first and the directive value after; it does no deduplication, and the result is always a space-separated string. Value rules match the common subset of classnames: strings pass through, non-zero numbers are stringified, arrays recurse, object keys with truthy values are kept, and other falsy values are skipped.
 
-## html — HTML injection
+## html — HTML injection {#html-injection}
 
 ```jsx
 <div x-html={richContent}>Placeholder</div>
@@ -387,7 +387,7 @@ Tag form conventionally carries its main argument in `value` (matching the built
 
 **Note**: do not reuse a built-in name for a custom directive. When names collide, whichever has the earlier `priority` matches first (built-ins by default); no error is raised.
 
-## Runtime helpers
+## Runtime helpers {#directive-runtime-helpers}
 
 `for` / `show` / `class` have runtime dependencies, imported by default from the three modules below with fixed local names `__brja_{kind}_helper__`:
 

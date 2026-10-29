@@ -1,4 +1,4 @@
-# 配置
+# 配置 {#configuration}
 
 插件选项只有五块：`prefix` 决定内置属性名的默认前缀，`tags` / `attributes` 两份指令清单决定启用哪些指令、叫什么名字、以什么顺序执行，`helpers` 决定运行时依赖从哪来，`locale` 决定报错语言。全部字段可省略，省略即走内置默认。
 
@@ -59,7 +59,7 @@ interface CustomDirectiveConfig {
 import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 ```
 
-## 零配置默认值
+## 零配置默认值 {#zero-config-defaults}
 
 `prefix` 与两份清单都不配时，等价于全部内置指令启用并各就各位（下表按默认前缀 `x-` 展示）：
 
@@ -75,7 +75,7 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 
 标签位内置条目的 `priority` 不可配，恒为 `for` = 0、`if` = 1；只有自定义标签能改。`elif` / `else` 也没有独立的 `priority`，恒为所属 `if` 加 `0.1` / `0.2`。
 
-## 名字前缀
+## 名字前缀 {#name-prefix}
 
 `prefix` 作用于所有属性位的默认名：内置条目是 `prefix + kind`，自定义条目是 `prefix + key`。省略时为 `x-`，于是内置得到 `x-for` / `x-if` / `x-elif` / `x-else` / `x-show` / `x-class` / `x-html`。
 
@@ -90,7 +90,7 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 ['babel-plugin-jsx-advanced', { prefix: 'v-' }]
 ```
 
-## 启用与禁用
+## 启用与禁用 {#enabling-and-disabling}
 
 每个内置键的值三选一：
 
@@ -102,7 +102,7 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 
 只想加一条自定义指令时，不必把内置抄一遍——没写出的键仍然走默认。
 
-## 条目字段
+## 条目字段 {#entry-fields}
 
 **内置标签位**（`tags.for` / `tags.if`）：
 
@@ -127,11 +127,11 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 | --- | --- | --- | --- |
 | `name` | `string \| string[]` | | 省略时属性位用 `prefix + key`，标签位用 key |
 | `priority` | `number` | | 省略时 `100 + 声明下标` |
-| `transform` | `Function` | ✅ | 命中后的变换逻辑，见[自定义指令](/babel/directives#自定义指令) |
+| `transform` | `Function` | ✅ | 命中后的变换逻辑，见[自定义指令](#custom-directives) |
 
 自定义条目没有 `helper` 字段——需要运行时依赖时在 `transform` 里往 `state.directiveHelpers` 登记。
 
-## 名字规则
+## 名字规则 {#naming-rules}
 
 `name`、`elif`、`else` 都接受单个字符串或字符串数组，解析时按同一套规则处理：
 
@@ -151,9 +151,9 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 
 标签名与属性名是两个独立命名空间，两侧都叫 `x-if` 也不冲突。当前不做跨条目重名检测：两个条目命中同一个名字时，按 `priority` 靠前的那条生效。
 
-## 执行顺序
+## 执行顺序 {#execution-order}
 
-`priority` 数值越小越先执行，允许小数，按升序排序后依次应用。内置默认值见[零配置默认值](#零配置默认值)，自定义条目从 100 起按声明顺序递增，配了 `priority` 就用自己的值。
+`priority` 数值越小越先执行，允许小数，按升序排序后依次应用。内置默认值见[零配置默认值](#zero-config-defaults)，自定义条目从 100 起按声明顺序递增，配了 `priority` 就用自己的值。
 
 执行模型：
 
@@ -161,9 +161,9 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 2. **属性位**：按 `priority` 升序遍历条目，在元素的属性里找同名属性。命中一条就摘掉该属性，然后执行 transform。
 3. **重新遍历**：transform 一旦替换节点，Babel 会重新遍历新树，剩余的指令在新树上继续执行。因此 `for`（0）先于 `if`（1）时，`if` 的条件可以引用循环变量；把两者对调就变成 Vue 3 语义。
 
-各指令具体产物见[指令](/babel/directives)。
+各指令具体产物见[指令](#directives)。
 
-## 运行时 helper
+## 运行时 helper {#runtime-helpers}
 
 只有 `for` / `show` / `class` 有运行时依赖，默认值：
 
@@ -192,12 +192,12 @@ import type { PluginOptions } from 'babel-plugin-jsx-advanced';
 
 helper 按 kind 走，不跟指令名走：把 `x-for` 改名成 `each`，导入名仍是 `__brja_for_helper__`。同一 helper 在 Program 结束时统一注入一次；源码里已有同名局部导入则跳过。
 
-## locale
+## locale {#locale}
 
 报错语言，取值 `en-US`（默认）与 `zh-CN`。大小写、连字符 / 下划线都容错：`zh` / `zh-CN` / `zh_cn` / `ZH_CN` 都归一到 `zh-CN`；带地区标记却不匹配的（如 `zh-TW`）回落默认语言，不做前缀回退。
 
-## 校验
+## 校验 {#validation}
 
 配置在 `resolve` 阶段只做补齐，不做任何运行时校验：缺省字段填默认值，非法字段按未配置处理（例如把 `attributes.for` 写成字符串 `'each'`，等价于没配，仍然使用 `x-for`）。
 
-字段类型由导出的 `PluginOptions` 类型约束，用 TypeScript 写配置时配错会在编译期报错；用 JS 写配置（`babel.config.js`）没有这层保护，请自行核对字段名。所有编译期报错见[错误码](/babel/errors)。
+字段类型由导出的 `PluginOptions` 类型约束，用 TypeScript 写配置时配错会在编译期报错；用 JS 写配置（`babel.config.js`）没有这层保护，请自行核对字段名。所有编译期报错见[错误码](#errors)。

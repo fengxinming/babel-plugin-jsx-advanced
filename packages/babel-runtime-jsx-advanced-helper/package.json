@@ -1,6 +1,6 @@
 {
   "name": "babel-runtime-jsx-advanced-helper",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A collection of helpers for babel-plugin-jsx-advanced",
   "sideEffects": false,
   "type": "module",
@@ -42,8 +42,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/master/packages/babel-runtime-jsx-advanced-helper"
+    "url": "git+https://github.com/fengxinming/babel-plugin-jsx-advanced.git",
+    "directory": "packages/babel-runtime-jsx-advanced-helper"
   },
+  "bugs": {
+    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/issues"
+  },
+  "homepage": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/main/packages/babel-runtime-jsx-advanced-helper#readme",
   "keywords": [
     "babel",
     "babel-plugin",

@@ -1,10 +1,10 @@
-# 错误码
+# 错误码 {#errors}
 
 插件在遍历 AST 时按节点位置抛错，全部走 `buildCodeFrameError`：终端里会输出出错位置的代码帧，错误指向真正出问题的节点，而不是整个元素。
 
-文案语言由 [locale](/babel/configuration#locale) 决定，默认 `en-US`。
+文案语言由 [locale](#locale) 决定，默认 `en-US`。
 
-## 运行时域
+## 运行时域 {#compile-stage}
 
 | key | 触发条件 | 定位 |
 | --- | --- | --- |
@@ -29,7 +29,7 @@
 </div>
 ```
 
-## 占位符
+## 占位符 {#placeholders}
 
 文案里的 <code v-pre>{{…}}</code> 会替换成实际值：
 
@@ -41,6 +41,6 @@
 | <code v-pre>{{tag}}</code> | 标签形式命中的标签名 |
 | <code v-pre>{{attribute}}</code> | 指令要合并或写入的宿主属性名，如 `style` / `className` / `dangerouslySetInnerHTML` |
 
-## 配置域
+## 配置域 {#configuration-stage}
 
-没有配置域错误。`resolve` 只补齐默认值、不校验配置，非法字段按未配置处理；字段类型由 `PluginOptions` 类型约束，用 TypeScript 写配置时配错会在编译期报错。详见[配置](/babel/configuration#校验)。
+没有配置域错误。`resolve` 只补齐默认值、不校验配置，非法字段按未配置处理；字段类型由 `PluginOptions` 类型约束，用 TypeScript 写配置时配错会在编译期报错。详见[配置](#validation)。

@@ -2,7 +2,7 @@
 title: 规则
 ---
 
-# 规则
+# 规则 {#rules}
 
 | 规则 | 校验内容 | 预设级别 |
 | --- | --- | --- |
@@ -12,7 +12,7 @@ title: 规则
 | `valid-tag-x-for` | 标签位循环的 `value` 绑定位与表达式 | error |
 | `valid-tag-x-if` | 标签位条件的 `value` 必填与分支链 | error |
 
-所有规则的名字都来自 [settings](/eslint/settings)，默认属性位为 `x-for` / `x-if` / `x-elif` / `x-else`，标签位为 `for` / `if` / `elif` / `else`。
+所有规则的名字都来自 [settings](#settings)，默认属性位为 `x-for` / `x-if` / `x-elif` / `x-else`，标签位为 `for` / `if` / `elif` / `else`。
 
 ## valid-attribute-x-for
 
@@ -105,7 +105,7 @@ title: 规则
 - `<elif>` / `<else>` 的前一个兄弟必须是 `<if>` 或 `<elif>`，遇到非空白文本 / 普通表达式即断链
 - `<else>` 不需要 `value`
 
-## 报错语言
+## 报错语言 {#message-language}
 
 默认英文，settings 里写 `locale: 'zh-CN'` 后所有规则输出中文，例如：
 

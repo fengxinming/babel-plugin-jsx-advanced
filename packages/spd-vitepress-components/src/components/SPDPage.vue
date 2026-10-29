@@ -5,7 +5,7 @@
 // 顺序与"哪些页参与聚合"完全由该 nav 决定, 不额外引入配置。
 import { computed } from 'vue';
 import { useData } from 'vitepress';
-import { useHashRoute } from '../composables/useHashRoute';
+import { scrollToHashNow, useHashRoute } from '../composables/useHashRoute';
 import SPDHome from './SPDHome.vue';
 import SPDSections from './SPDSections.vue';
 
@@ -21,6 +21,11 @@ const cta = computed(() => frontmatter.value.cta ?? {});
 function backToTop() {
   window.scrollTo({ top: 0, behavior: 'smooth' });
 }
+
+// 区块渲染完成后按当前 hash 定位 (刷新/直链/切换语言都会重新 resolve)
+function onSectionsReady() {
+  scrollToHashNow(location.hash);
+}
 </script>
 
 <template>
@@ -33,7 +38,7 @@ function backToTop() {
          —— VP 默认主题全链路没有任何 Suspense (其页面组件都是同步 setup), 所以边界加在这里。
          SSR 侧 Suspense 是透明的 (server-renderer 的 ssrRenderSuspense 只渲染 default slot),
          首屏 HTML 仍是完整的全部区块。边界只包内容区, 不影响顶栏/搜索等 VP 自身组件。 -->
-    <Suspense v-if="frontmatter.nav" :key="page.relativePath">
+    <Suspense v-if="frontmatter.nav" :key="page.relativePath" @resolve="onSectionsReady">
       <SPDSections />
     </Suspense>
 

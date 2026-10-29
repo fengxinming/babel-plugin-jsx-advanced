@@ -22,6 +22,16 @@ function scrollToHash(hash: string, behavior: ScrollBehavior): void {
 }
 
 /**
+ * 哈希定位入口: 目标区块由 SPDSections 异步渲染, 由 SPDPage 的 <Suspense> 兜底;
+ * 在 Suspense resolve 之后调用本函数, 此时 section 已挂载, 可直接定位。
+ */
+export function scrollToHashNow(hash: string): void {
+  if (hash) {
+    nextTick(() => scrollToHash(hash, 'smooth'));
+  }
+}
+
+/**
  * 程序化导航: 写地址栏 + 平滑滚动。入参 '#foo' / 'foo' 均可 (内部归一化,
  * 避免 anchor.hash 自带 '#' 时拼出 ##foo 双 hash); 传空串 = 回顶部并清掉地址栏 hash。
  */
@@ -60,11 +70,11 @@ export function useHashRoute(): void {
     history.scrollRestoration = 'manual';
     document.addEventListener('click', onDocClick);
     window.addEventListener('popstate', onPopState);
-    // 刷新/直链进入: sections 同步渲染, 等 mounted 完成后平滑定位。
+    // 刷新/直链进入: 有 nav 的页由 Suspense resolve 兜底定位, 这里覆盖无区块的页。
     // 'smooth' 与原生的 CSS smooth fragment 动画同向叠加, 不会像 'instant'
     // 那样半路掐断动画产生闪跳; 滚动结束由 scrollSpy 防抖 flush 同值短路
     if (location.hash) {
-      nextTick(() => scrollToHash(location.hash, 'smooth'));
+      scrollToHashNow(location.hash);
     }
   });
 
