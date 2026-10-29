@@ -2,7 +2,7 @@
 title: 指令
 ---
 
-# 指令
+# 指令 {#directives}
 
 `babel-plugin-jsx-advanced` 把类 Vue 的指令写法编译成普通 JSX 表达式，产物不依赖任何运行时框架。
 
@@ -10,7 +10,7 @@ title: 指令
 
 内置五个行为：`for` / `if` / `show` / `class` / `html`。`for` 与 `if` 有标签形式，`if` 另外带 `elif` / `else` 两个分支名；`show` / `class` / `html` 只有属性形式。除此之外，两份清单的 `custom` 可以注册任意自定义指令。
 
-## 概览
+## 概览 {#overview}
 
 | 指令 | 属性形式默认名 | 标签形式默认名 | 运行时依赖 | 作用 |
 | --- | --- | --- | --- | --- |
@@ -21,13 +21,13 @@ title: 指令
 | `html` | `x-html` | — | 无（内联对象） | HTML 注入 |
 | 自定义 | `prefix + key` 或 `name` | `key` 或 `name` | 由 `transform` 决定 | 任意转换 |
 
-名字、启停、执行顺序都在[配置](/babel/configuration)里改；本文只讲用法与产物。
+名字、启停、执行顺序都在[配置](#configuration)里改；本文只讲用法与产物。
 
-## 命名与执行顺序
+## 命名与执行顺序 {#naming-and-execution-order}
 
 **命名**：每个条目的 `name` 支持 `string` 或 `string[]`，数组里的名字完全等价——没有主名与别名之分。解析时会逐项 `trim`、丢弃空白项、按首次出现顺序去重；全部无效时回落到默认名：内置属性位是 `prefix + kind`，内置标签位是 `kind`，自定义属性位是 `prefix + key`，自定义标签位是 `key`。错误文案里显示的永远是**代码里实际写的那个名字**。
 
-内置属性位的默认名由 `prefix + kind` 拼出（`x-for`、`x-if`、`x-elif`、`x-else`、`x-show`、`x-class`、`x-html`），`prefix` 默认 `x-`，可在[配置](/babel/configuration#名字前缀)里改；标签位默认名不带前缀。
+内置属性位的默认名由 `prefix + kind` 拼出（`x-for`、`x-if`、`x-elif`、`x-else`、`x-show`、`x-class`、`x-html`），`prefix` 默认 `x-`，可在[配置](#name-prefix)里改；标签位默认名不带前缀。
 
 **优先级**：`priority` 数值越小越先执行，可以写小数。属性位默认值：
 
@@ -48,7 +48,7 @@ title: 指令
 
 **放在哪里**：处于 JSX 子节点位置时，替换结果会自动包成 `{…}` 表达式容器；处于 `return`、变量初始化等表达式位置时直接替换，不再包容器。
 
-## for —— 列表渲染
+## for —— 列表渲染 {#for-list-rendering}
 
 **属性形式**
 
@@ -110,7 +110,7 @@ const List = ({ items }) => (
 | 标签形式缺 `value` 属性或没有绑定表达式 | `TAG_VALUE_REQUIRED` |
 | 绑定表达式不是 `… in …` 形式 | `FOR_EXPRESSION_INVALID` |
 
-## if —— 条件渲染
+## if —— 条件渲染 {#if-conditional-rendering}
 
 **属性形式**
 
@@ -169,7 +169,7 @@ const List = ({ items }) => (
 | 落单的 `elif` | `BRANCH_ELIF_TAG_REQUIRES_PRECEDING` / `BRANCH_ELIF_ATTRIBUTE_REQUIRES_PRECEDING` |
 | 落单的 `else` | `BRANCH_ELSE_TAG_REQUIRES_PRECEDING` / `BRANCH_ELSE_ATTRIBUTE_REQUIRES_PRECEDING` |
 
-## show —— 显隐切换
+## show —— 显隐切换 {#show-toggle-visibility}
 
 ```jsx
 <div x-show={visible}>内容</div>
@@ -187,7 +187,7 @@ const List = ({ items }) => (
 
 值必须是绑定表达式（`DIRECTIVE_VALUE_REQUIRED`），字符串写法不接受。没有 `style` 时直接用三目切换，显示为 `null`、隐藏为 `{ display: 'none' }`；已有绑定 `style` 时交给 helper 浅拷贝后写入 `display`，其它样式不会丢。
 
-## class —— 类名合并
+## class —— 类名合并 {#class-merging}
 
 ```jsx
 <div x-class={{ active: visible }}>内容</div>
@@ -204,7 +204,7 @@ const List = ({ items }) => (
 
 helper 按参数顺序串接，已有 `className` 在前、指令值在后；不做去重，结果始终是空格分隔的字符串。取值规则与 classnames 的常用子集一致：字符串原样、非 0 数字转字符串、数组递归、对象取值为真的 key，其余 falsy 跳过。
 
-## html —— HTML 注入
+## html —— HTML 注入 {#html-injection}
 
 ```jsx
 <div x-html={richContent}>占位</div>
@@ -218,7 +218,7 @@ helper 按参数顺序串接，已有 `className` 在前、指令值在后；不
 
 值可以是绑定表达式或字符串字面量（`x-html="<b>hi</b>"`）。元素上已经有 `dangerouslySetInnerHTML` 时不会静默覆盖，直接报 `ATTRIBUTE_ALREADY_SET`，并把错误定位到已存在的那个属性上。
 
-## 自定义指令
+## 自定义指令 {#custom-directives}
 
 自定义指令同时支持两种形态，配置在 `tags.custom` / `attributes.custom`：**属性位未配 `name` 时默认名 = `prefix + key`**（默认前缀 `x-`，key 写 `model` 就命中 `x-model`），**标签位未配 `name` 时默认名就是 key**。配置了 `name` 就只用 `name`（同样支持 `string | string[]`）。`priority` 可选，默认 100 + 声明顺序。
 
@@ -387,7 +387,7 @@ export default {
 
 **注意**：自定义名字不要和内置重名。重名时谁先命中取决于 `priority`（默认内置在前），不会报错。
 
-## 运行时 helper
+## 运行时 helper {#directive-runtime-helpers}
 
 `for` / `show` / `class` 有运行时依赖，默认从下面三个模块做默认导入，局部变量名固定 `__brja_{kind}_helper__`：
 

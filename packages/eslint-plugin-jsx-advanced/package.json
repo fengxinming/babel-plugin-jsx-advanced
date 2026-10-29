@@ -1,6 +1,6 @@
 {
   "name": "eslint-plugin-jsx-advanced",
-  "version": "2.0.0",
+  "version": "2.0.1",
   "description": "A eslint plugin for using babel-plugin-jsx-advanced",
   "type": "module",
   "main": "dist/index.cjs",
@@ -25,8 +25,13 @@
   },
   "repository": {
     "type": "git",
-    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/master/packages/eslint-plugin-jsx-advanced"
+    "url": "git+https://github.com/fengxinming/babel-plugin-jsx-advanced.git",
+    "directory": "packages/eslint-plugin-jsx-advanced"
   },
+  "bugs": {
+    "url": "https://github.com/fengxinming/babel-plugin-jsx-advanced/issues"
+  },
+  "homepage": "https://github.com/fengxinming/babel-plugin-jsx-advanced/tree/main/packages/eslint-plugin-jsx-advanced#readme",
   "keywords": [
     "eslint-plugin-jsx-advanced",
     "babel-plugin-jsx-advanced",

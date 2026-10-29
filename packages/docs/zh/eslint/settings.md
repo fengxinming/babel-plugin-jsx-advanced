@@ -2,7 +2,7 @@
 title: 配置
 ---
 
-# 配置
+# 配置 {#settings}
 
 所有配置都从 ESLint 的 `settings['jsx-advanced']` 读取，规则本身不接收 options。
 
@@ -32,7 +32,7 @@ export default [
 ];
 ```
 
-## 默认名
+## 默认名 {#default-names}
 
 | 位置 | for | if | elif | else |
 | --- | --- | --- | --- | --- |
@@ -41,7 +41,7 @@ export default [
 
 标签位没有 `x-` 前缀，与 Babel 插件的默认名一致。Babel 侧新增的 `prefix` 选项只作用于属性位与自定义指令，ESLint 侧没有这个选项——名字必须逐个写明。
 
-## 名字规则
+## 名字规则 {#naming-rules}
 
 每个字段都是 `string | string[]`：写字符串视为单名，写数组视为多名。
 
@@ -59,7 +59,7 @@ export default [
 
 `attribute.for` 与 `tag.for` 是两份独立的集合，不能共用一个默认名。展开属性（`{...props}`）没有名字，命名空间属性（`xlink:href`）的名字不是字符串，都不参与匹配。
 
-## locale
+## locale {#locale}
 
 ```js
 settings: { 'jsx-advanced': { locale: 'zh-CN' } }
@@ -69,7 +69,7 @@ settings: { 'jsx-advanced': { locale: 'zh-CN' } }
 - `zh` 与 `zh-CN` 视为中文，大小写与下划线不敏感（`zh_CN`、`ZH-cn` 都算）
 - 其它值（包括 `zh-TW`）一律回落英文
 
-## 与 Babel 插件对齐
+## 与 Babel 插件对齐 {#align-with-babel-plugin}
 
 ESLint 规则只按 settings 的名字找节点，名字对不上时不会报任何错，也不会提示“未找到指令”。改了 Babel 配置就要同步这里：
 
