@@ -21,7 +21,7 @@
  * 放在 composables/ 而非 utils/nav.ts: nav.ts 装的是 hash 推导这类同步纯函数,
  * 本模块是异步的模块加载, 职责不同层。
  */
-import { useData, type DefaultTheme } from 'vitepress';
+import { useData, withBase, type DefaultTheme } from 'vitepress';
 import { pathToFile } from 'vitepress/dist/client/app/utils.js';
 import { normalized } from '../utils/nav';
 import type { MarkdownModule, RenderedSection } from '../_types';
@@ -34,7 +34,13 @@ import type { MarkdownModule, RenderedSection } from '../_types';
  * 否则构建期会尝试解析并报错。代价是 dev 下每次调用都会真发一次请求 (无预构建产物复用)。
  */
 async function loadSection(link: string): Promise<RenderedSection | null> {
-  const file = pathToFile(link);
+  // VP 的 pathToFile 两种环境口径不同 (vitepress/dist/client/app/utils.js):
+  // - 浏览器 prod: 先校验 path.startsWith(base), 不通过直接返回 null, 再去掉 base 查 __VP_HASH_MAP__;
+  // - SSR: 只吃不带 base 的源路径 (内部 slice(1) 后拼 .md.js)。
+  // 而 themeConfig.spd.nav 的 link 是站内根路径 (/babel/xxx, 不带 base), 所以浏览器端必须补 base,
+  // 否则部署在子路径 (GH Pages /babel-plugin-jsx-advanced/) 时所有区块都会查出 null —— 表现为
+  // 静态 HTML 有内容、客户端一水合就把 md 与左导航全部清空; 根路径部署 (本地) 恰好不触发。
+  const file = pathToFile(typeof window === 'undefined' ? link : withBase(link));
   // pathToFile 查不到对应 hash 时返回 null 而非抛错 (见 vitepress utils.js prod 分支),
   // 直接 import(null) 会抛出难懂的语法错误, 故先挡掉。
   if (!file) {

@@ -5,7 +5,7 @@
 // 自定义 layout 页 (如 Playground) 同样在清单里, 经 SPDSections 的动态组件分支渲染。
 // 顶栏 logo 由 themeConfig.siteTitle (HTML) 承担; 社交链接走 VPLayout 顶栏, 这里不重复。
 import { computed } from 'vue';
-import { useData } from 'vitepress';
+import { useData, withBase } from 'vitepress';
 import { hashFor, normalized } from '../utils/nav';
 import SPDNavBarSearch from './SPDNavBarSearch.vue';
 
@@ -20,8 +20,10 @@ const links = computed(() => theme.value.spd?.nav?.[frontmatter.value.nav] ?? []
 // 父组件下发的聚合区块 url 清单 (loader 产物带 .html 后缀, 统一归一化后比对)
 const sectionSet = computed(() => new Set((props.sections ?? []).map(normalized)));
 
+// 聚合区块走页内锚点 (#id); 独立工具页是真实路由, 必须补 base,
+// 否则部署在子路径时 href 缺少前缀直接 404
 function hrefFor(link: string): string {
-  return sectionSet.value.has(normalized(link)) ? hashFor(link) : link;
+  return sectionSet.value.has(normalized(link)) ? hashFor(link) : withBase(link);
 }
 </script>
 
